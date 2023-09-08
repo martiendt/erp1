@@ -5,12 +5,14 @@ import { BaseAutocomplete, BaseBreadcrumb, BaseDivider, BaseSelect, BaseInput } 
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRoute, useRouter } from 'vue-router'
 import { useWarehouseApi } from '../api/warehouse'
+import { useBranchApi } from '../api/branch'
 import axios from '@/axios'
 
 const { notification } = useBaseNotification()
 const route = useRoute()
 const router = useRouter()
 const warehouseApi = useWarehouseApi()
+const branchApi = useBranchApi()
 
 const _id = ref('')
 
@@ -18,7 +20,8 @@ const form = ref({
   name: '',
   username: '',
   role: '',
-  warehouse_id: ''
+  warehouse_id: '',
+  branch_id: ''
 })
 
 const list = [
@@ -35,10 +38,15 @@ const selectedWarehouse = ref<{ id: string; label: string }>()
 watch(selectedWarehouse, () => {
   form.value.warehouse_id = selectedWarehouse.value?.id ?? ''
 })
+const selectedBranch = ref<{ id: string; label: string }>()
+watch(selectedBranch, () => {
+  form.value.branch_id = selectedBranch.value?.id ?? ''
+})
 
 onMounted(async () => {
   try {
     warehouseApi.fetchListWarehouse()
+    branchApi.fetchListBranch()
 
     const result = await axios.get(`/v1/users/${route.params.id}`)
 
@@ -55,6 +63,9 @@ onMounted(async () => {
       selectedRole.value = list[index < 0 ? 1 : index]
       if (result.data.warehouse) {
         selectedWarehouse.value = { id: result.data.warehouse._id, label: result.data.warehouse.name }
+      }
+      if (result.data.branch) {
+        selectedBranch.value = { id: result.data.branch._id, label: result.data.branch.name }
       }
     } else {
       router.push('/404')
@@ -132,6 +143,18 @@ const onSubmit = async () => {
                 required
                 v-model="selectedWarehouse"
                 :list="warehouseApi.listWarehouse.value"
+              ></component>
+            </div>
+            <div class="flex flex-col items-start gap-1">
+              <label class="text-sm font-bold">
+                Branch
+                <span class="text-xs text-slate-400">(required)</span>
+              </label>
+              <component
+                :is="BaseAutocomplete"
+                required
+                v-model="selectedBranch"
+                :list="branchApi.listBranch.value"
               ></component>
             </div>
             <button class="btn btn-primary">Submit</button>

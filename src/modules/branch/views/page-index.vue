@@ -15,35 +15,25 @@ const router = useRouter()
 const searchAll = ref('')
 const isLoadingSearch = ref(false)
 
-export interface UserInterface {
+export interface branchInterface {
   _id: string
   name: string
-  username: string
-  role: string
-  warehouse: {
-    name: string
-  }
-  branch: {
-    name: string
-  }
 }
-const users = ref<UserInterface[]>([])
+const branches = ref<branchInterface[]>([])
 
-const getUsers = async (page = 1, search = '') => {
-  const result = await axios.get('/v1/users', {
+const getbranches = async (page = 1, search = '') => {
+  const result = await axios.get('/v1/branches', {
     params: {
       pageSize: 10,
       page: page,
       sort: 'name',
       filter: {
-        username: search,
-        name: search,
-        role: search
+        name: search
       }
     }
   })
 
-  users.value = result.data.data
+  branches.value = result.data.data
 
   pagination.page.value = result.data.pagination.page
   pagination.pageCount.value = result.data.pagination.pageCount
@@ -63,7 +53,7 @@ watchDebounced(
       }
     })
     isLoadingSearch.value = true
-    await getUsers(1, searchAll.value)
+    await getbranches(1, searchAll.value)
     isLoadingSearch.value = false
   },
   { debounce: 500, maxWait: 1000 }
@@ -72,7 +62,7 @@ watchDebounced(
 onMounted(async () => {
   const page = Number(route.query.page ?? 1)
   searchAll.value = route.query.search?.toString() ?? ''
-  await getUsers(page, searchAll.value)
+  await getbranches(page, searchAll.value)
 })
 
 const paginatePrev = async () => {
@@ -83,7 +73,7 @@ const paginatePrev = async () => {
       page: pagination.previousPage()
     }
   })
-  await getUsers(pagination.previousPage(), searchAll.value)
+  await getbranches(pagination.previousPage(), searchAll.value)
 }
 const paginateNext = async () => {
   router.replace({
@@ -93,7 +83,7 @@ const paginateNext = async () => {
       page: pagination.nextPage()
     }
   })
-  await getUsers(pagination.nextPage(), searchAll.value)
+  await getbranches(pagination.nextPage(), searchAll.value)
 }
 const paginate = async (page: number) => {
   router.replace({
@@ -103,23 +93,23 @@ const paginate = async (page: number) => {
       page: page
     }
   })
-  await getUsers(page, searchAll.value)
+  await getbranches(page, searchAll.value)
 }
 </script>
 
 <template>
   <div class="main-content-container">
     <div class="main-content-header">
-      <h1>User</h1>
+      <h1>branch</h1>
       <base-divider orientation="horizontal" />
-      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'User' }]" />
+      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'branch' }]" />
     </div>
     <div class="main-content-body">
       <div class="card card-template">
         <div class="flex flex-col gap-4">
           <div class="w-full flex items-center gap-4">
             <div class="w-full flex space-x-2">
-              <router-link to="/user/create" class="btn btn-secondary rounded-none space-x-1">
+              <router-link to="/branch/create" class="btn btn-secondary rounded-none space-x-1">
                 <i class="i-far-pen-to-square block"></i>
                 <p>Add New</p>
               </router-link>
@@ -139,38 +129,16 @@ const paginate = async (page: number) => {
                       <p>Name</p>
                     </div>
                   </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
-                      <p>Username</p>
-                    </div>
-                  </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
-                      <p>Role</p>
-                    </div>
-                  </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
-                      <p>Warehouse</p>
-                    </div>
-                  </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
-                      <p>Branch</p>
-                    </div>
-                  </th>
                 </tr>
               </thead>
               <tbody>
-                <template v-if="users.length > 0">
-                  <tr v-for="user in users" :key="user._id" class="basic-table-row">
+                <template v-if="branches.length > 0">
+                  <tr v-for="branch in branches" :key="branch._id" class="basic-table-row">
                     <td class="basic-table-body">
-                      <router-link :to="`/user/${user._id}`" class="text-info">{{ user.name }}</router-link>
+                      <router-link :to="`/branch/${branch._id}`" class="text-info">{{
+                        branch.name
+                      }}</router-link>
                     </td>
-                    <td class="basic-table-body">{{ user.username }}</td>
-                    <td class="basic-table-body">{{ user.role }}</td>
-                    <td class="basic-table-body">{{ user.warehouse?.name }}</td>
-                    <td class="basic-table-body">{{ user.branch?.name }}</td>
                   </tr>
                 </template>
               </tbody>

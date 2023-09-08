@@ -5,25 +5,27 @@ import { BaseAutocomplete, BaseBreadcrumb, BaseDivider, BaseSelect, BaseInput } 
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRouter } from 'vue-router'
 import { useWarehouseApi } from '../api/warehouse'
+import { useBranchApi } from '../api/branch'
 import axios from '@/axios'
 
 const { notification } = useBaseNotification()
 const router = useRouter()
 const warehouseApi = useWarehouseApi()
+const branchApi = useBranchApi()
 
 const form = ref({
   name: '',
   username: '',
   password: '',
-  role: 'cashier',
-  warehouse_id: ''
+  role: 'administrator',
+  warehouse_id: '',
+  branch_id: ''
 })
 
 const list = [
   { id: 1, label: 'Administrator' },
   { id: 2, label: 'Admin Purchasing' },
-  { id: 3, label: 'Admin Stock' },
-  { id: 4, label: 'Cashier' }
+  { id: 3, label: 'Admin Stock' }
 ]
 const selectedRole = ref(list[3])
 watch(selectedRole, () => {
@@ -32,6 +34,10 @@ watch(selectedRole, () => {
 const selectedWarehouse = ref<{ id: string; label: string }>()
 watch(selectedWarehouse, () => {
   form.value.warehouse_id = selectedWarehouse.value?.id ?? ''
+})
+const selectedBranch = ref<{ id: string; label: string }>()
+watch(selectedBranch, () => {
+  form.value.branch_id = selectedBranch.value?.id ?? ''
 })
 
 const errors = ref()
@@ -61,6 +67,7 @@ const onSubmit = async () => {
 
 onMounted(async () => {
   await warehouseApi.fetchListWarehouse()
+  await branchApi.fetchListBranch()
 })
 </script>
 
@@ -101,6 +108,18 @@ onMounted(async () => {
                   <span class="text-xs text-slate-400">(required)</span>
                 </label>
                 <component :is="BaseSelect" v-model="selectedRole" required :list="list"></component>
+              </div>
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold">
+                  Branch
+                  <span class="text-xs text-slate-400">(required)</span>
+                </label>
+                <component
+                  :is="BaseAutocomplete"
+                  required
+                  v-model="selectedBranch"
+                  :list="branchApi.listBranch.value"
+                ></component>
               </div>
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
