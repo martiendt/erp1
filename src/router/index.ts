@@ -5,6 +5,7 @@ import { routes as authenticationRoutes } from '@/modules/authentication/routes'
 import { routes as userRoutes } from '@/modules/user/routes'
 import { routes as branchRoutes } from '@/modules/branch/routes'
 import { routes as warehouseRoutes } from '@/modules/warehouse/routes'
+import { routes as expeditionRoutes } from '@/modules/expedition/routes'
 import { routes as supplierRoutes } from '@/modules/supplier/routes'
 import { routes as customerRoutes } from '@/modules/customer/routes'
 import { routes as itemCategoryRoutes } from '@/modules/item-category/routes'
@@ -26,6 +27,7 @@ const routes = [
   branchExpenseRoutes,
   branchRoutes,
   warehouseRoutes,
+  expeditionRoutes,
   supplierRoutes,
   customerRoutes,
   itemCategoryRoutes,
