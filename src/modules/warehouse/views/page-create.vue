@@ -10,6 +10,7 @@ const { notification } = useBaseNotification()
 const router = useRouter()
 
 const form = ref({
+  code: '',
   name: ''
 })
 
@@ -22,6 +23,7 @@ const onSubmit = async () => {
     const response = await axios.post('/v1/warehouses', form.value)
 
     if (response.status === 201) {
+      form.value.code = ''
       form.value.name = ''
       router.push('/warehouse')
     }
@@ -55,6 +57,7 @@ const onSubmit = async () => {
         <div class="flex flex-col gap-4">
           <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
             <div class="space-y-2">
+              <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
             </div>
             <button class="btn btn-primary">Submit</button>

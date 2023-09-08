@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { AxiosError } from 'axios'
 import { BaseBreadcrumb, BaseDivider, BaseInput } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import axios from '@/axios'
 
 const { notification } = useBaseNotification()
+const route = useRoute()
 const router = useRouter()
+
+const _id = ref('')
 
 const form = ref({
   code: '',
@@ -17,21 +20,35 @@ const form = ref({
   email: ''
 })
 
+onMounted(async () => {
+  try {
+    const result = await axios.get(`/v1/expeditions/${route.params.id}`)
+
+    if (result.status === 200) {
+      _id.value = result.data._id
+      form.value.code = result.data.code
+      form.value.name = result.data.name
+      form.value.address = result.data.address
+      form.value.phone = result.data.phone
+      form.value.email = result.data.email
+    } else {
+      router.push('/404')
+    }
+  } catch (error) {
+    router.push('/404')
+  }
+})
+
 const errors = ref()
 const isSubmitted = ref(false)
 
 const onSubmit = async () => {
   try {
     isSubmitted.value = true
-    const response = await axios.post('/v1/suppliers', form.value)
+    const response = await axios.patch(`/v1/expeditions/${_id.value}`, form.value)
 
-    if (response.status === 201) {
-      form.value.code = ''
-      form.value.name = ''
-      form.value.address = ''
-      form.value.phone = ''
-      form.value.email = ''
-      router.push('/supplier')
+    if (response.status === 204) {
+      router.push('/expedition')
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -51,17 +68,24 @@ const onSubmit = async () => {
 <template>
   <div class="main-content-container">
     <div class="main-content-header">
-      <h1>Supplier</h1>
+      <h1>Expedition</h1>
       <base-divider orientation="horizontal" />
-      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Supplier', path: '/supplier' }, { name: 'Create' }]" />
+      <component
+        :is="BaseBreadcrumb"
+        :breadcrumbs="[
+          { name: 'Expedition', path: '/expedition' },
+          { name: route.params.id.toString(), path: `/expedition/${route.params.id.toString()}` },
+          { name: 'Edit' }
+        ]"
+      />
     </div>
     <div class="main-content-body">
       <div class="card card-template">
-        <div class="card-header">
-          <h2>New Supplier</h2>
+        <div class="card-header bg-slate-200 dark:bg-slate-700 px-4 py-2 -mx-4 -my-2 font-extrabold">
+          <h2>Edit Expedition</h2>
         </div>
         <div class="flex flex-col gap-4">
-          <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
+          <form @submit.prevent="onSubmit()" class="space-y-5">
             <div class="space-y-2">
               <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>

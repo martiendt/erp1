@@ -15,7 +15,7 @@ const router = useRouter()
 const searchAll = ref('')
 const isLoadingSearch = ref(false)
 
-export interface CustomerInterface {
+export interface ExpeditionInterface {
   _id: string
   code: string
   name: string
@@ -23,10 +23,10 @@ export interface CustomerInterface {
   phone?: string
   email?: string
 }
-const customers = ref<CustomerInterface[]>([])
+const expeditions = ref<ExpeditionInterface[]>([])
 
-const getCustomers = async (page = 1, search = '') => {
-  const result = await axios.get('/v1/customers', {
+const getExpeditions = async (page = 1, search = '') => {
+  const result = await axios.get('/v1/expeditions', {
     params: {
       pageSize: 10,
       page: page,
@@ -41,7 +41,7 @@ const getCustomers = async (page = 1, search = '') => {
     }
   })
 
-  customers.value = result.data.data
+  expeditions.value = result.data.data
 
   pagination.page.value = result.data.pagination.page
   pagination.pageCount.value = result.data.pagination.pageCount
@@ -61,7 +61,7 @@ watchDebounced(
       }
     })
     isLoadingSearch.value = true
-    await getCustomers(1, searchAll.value)
+    await getExpeditions(1, searchAll.value)
     isLoadingSearch.value = false
   },
   { debounce: 500, maxWait: 1000 }
@@ -70,7 +70,7 @@ watchDebounced(
 onMounted(async () => {
   const page = Number(route.query.page ?? 1)
   searchAll.value = route.query.search?.toString() ?? ''
-  await getCustomers(page, searchAll.value)
+  await getExpeditions(page, searchAll.value)
 })
 
 const paginatePrev = async () => {
@@ -81,7 +81,7 @@ const paginatePrev = async () => {
       page: pagination.previousPage()
     }
   })
-  await getCustomers(pagination.previousPage(), searchAll.value)
+  await getExpeditions(pagination.previousPage(), searchAll.value)
 }
 const paginateNext = async () => {
   router.replace({
@@ -91,7 +91,7 @@ const paginateNext = async () => {
       page: pagination.nextPage()
     }
   })
-  await getCustomers(pagination.nextPage(), searchAll.value)
+  await getExpeditions(pagination.nextPage(), searchAll.value)
 }
 const paginate = async (page: number) => {
   router.replace({
@@ -101,23 +101,23 @@ const paginate = async (page: number) => {
       page: page
     }
   })
-  await getCustomers(page, searchAll.value)
+  await getExpeditions(page, searchAll.value)
 }
 </script>
 
 <template>
   <div class="main-content-container">
     <div class="main-content-header">
-      <h1>Customer</h1>
+      <h1>Expedition</h1>
       <base-divider orientation="horizontal" />
-      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Customer' }]" />
+      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Expedition' }]" />
     </div>
     <div class="main-content-body">
       <div class="card card-template">
         <div class="flex flex-col gap-4">
           <div class="w-full flex items-center gap-4">
             <div class="w-full flex space-x-2">
-              <router-link to="/customer/create" class="btn btn-secondary rounded-none space-x-1">
+              <router-link to="/expedition/create" class="btn btn-secondary rounded-none space-x-1">
                 <i class="i-far-pen-to-square block"></i>
                 <p>Add New</p>
               </router-link>
@@ -160,15 +160,17 @@ const paginate = async (page: number) => {
                 </tr>
               </thead>
               <tbody>
-                <template v-if="customers.length > 0">
-                  <tr v-for="customer in customers" :key="customer._id" class="basic-table-row">
-                    <td class="basic-table-body">{{ customer.code }}</td>
+                <template v-if="expeditions.length > 0">
+                  <tr v-for="expedition in expeditions" :key="expedition._id" class="basic-table-row">
+                    <td class="basic-table-body">{{ expedition.code }}</td>
                     <td class="basic-table-body">
-                      <router-link :to="`/customer/${customer._id}`" class="text-info">{{ customer.name }}</router-link>
+                      <router-link :to="`/expedition/${expedition._id}`" class="text-info">{{
+                        expedition.name
+                      }}</router-link>
                     </td>
-                    <td class="basic-table-body">{{ customer.address }}</td>
-                    <td class="basic-table-body">{{ customer.phone }}</td>
-                    <td class="basic-table-body">{{ customer.email }}</td>
+                    <td class="basic-table-body">{{ expedition.address }}</td>
+                    <td class="basic-table-body">{{ expedition.phone }}</td>
+                    <td class="basic-table-body">{{ expedition.email }}</td>
                   </tr>
                 </template>
               </tbody>

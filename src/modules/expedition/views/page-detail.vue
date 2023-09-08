@@ -6,14 +6,12 @@ import { BaseInput } from '@/components/index'
 import { useRoute, useRouter } from 'vue-router'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import axios from '@/axios'
-import { AxiosError } from 'axios'
 
 const route = useRoute()
 const router = useRouter()
 const { notification } = useBaseNotification()
 
 const form = ref({
-  code: '',
   name: '',
   address: '',
   phone: '',
@@ -22,10 +20,9 @@ const form = ref({
 
 onMounted(async () => {
   try {
-    const result = await axios.get(`/v1/suppliers/${route.params.id}`)
+    const result = await axios.get(`/v1/expeditions/${route.params.id}`)
 
     if (result.status === 200) {
-      form.value.code = result.data.code
       form.value.name = result.data.name
       form.value.address = result.data.address
       form.value.phone = result.data.phone
@@ -39,21 +36,11 @@ onMounted(async () => {
 })
 
 const onDelete = async () => {
-  try {
-    if (confirm('Are you sure want to delete this data?')) {
-      const result = await axios.delete(`/v1/suppliers/${route.params.id}`)
-      if (result.status === 204) {
-        notification('', 'Delete supplier data success', { type: TypesEnum.Success })
-        router.push('/supplier')
-      }
-    }
-  } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
-    } else if (error instanceof AxiosError) {
-      notification(error.code as string, error.message, { type: TypesEnum.Warning })
-    } else {
-      notification('Unknown Error', '', { type: TypesEnum.Warning })
+  if (confirm('Are you sure want to delete this data?')) {
+    const result = await axios.delete(`/v1/expeditions/${route.params.id}`)
+    if (result.status === 204) {
+      notification('', 'Delete expedition data success', { type: TypesEnum.Success })
+      router.push('/expedition')
     }
   }
 }
@@ -62,27 +49,27 @@ const onDelete = async () => {
 <template>
   <div class="main-content-container">
     <div class="main-content-header">
-      <h1>Supplier</h1>
+      <h1>Expedition</h1>
       <base-divider orientation="horizontal" />
       <component
         :is="BaseBreadcrumb"
-        :breadcrumbs="[{ name: 'Supplier', path: '/supplier' }, { name: route.params.id.toString() }]"
+        :breadcrumbs="[{ name: 'Expedition', path: '/expedition' }, { name: route.params.id.toString() }]"
       />
     </div>
     <div class="main-content-body">
       <div class="card card-template">
         <div class="card-header bg-slate-200 dark:bg-slate-700 px-4 py-2 -mx-4 -my-2 font-extrabold">
-          <h2>Show Supplier</h2>
+          <h2>Show Expedition</h2>
           <div class="flex gap-2 overflow-x-hidden">
             <div>
-              <router-link to="/supplier/create" class="btn btn-secondary btn-sm rounded-none space-x-1">
+              <router-link to="/expedition/create" class="btn btn-secondary btn-sm rounded-none space-x-1">
                 <i class="i-far-circle-plus block"></i>
                 <span>Add</span>
               </router-link>
             </div>
             <div>
               <router-link
-                :to="`/supplier/${route.params.id}/edit`"
+                :to="`/expedition/${route.params.id}/edit`"
                 class="btn btn-secondary btn-sm rounded-none space-x-1"
               >
                 <i class="i-far-pen-to-square block"></i>
@@ -100,7 +87,6 @@ const onDelete = async () => {
         <div class="flex flex-col gap-4">
           <div class="space-y-5">
             <div class="space-y-2">
-              <component :is="BaseInput" readonly v-model="form.code" label="Code"></component>
               <component :is="BaseInput" readonly v-model="form.name" label="Name"></component>
               <component :is="BaseInput" readonly v-model="form.address" label="Address"></component>
               <component :is="BaseInput" readonly v-model="form.phone" label="Phone"></component>

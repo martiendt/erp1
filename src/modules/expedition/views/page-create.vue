@@ -23,7 +23,7 @@ const isSubmitted = ref(false)
 const onSubmit = async () => {
   try {
     isSubmitted.value = true
-    const response = await axios.post('/v1/suppliers', form.value)
+    const response = await axios.post('/v1/expeditions', form.value)
 
     if (response.status === 201) {
       form.value.code = ''
@@ -31,7 +31,7 @@ const onSubmit = async () => {
       form.value.address = ''
       form.value.phone = ''
       form.value.email = ''
-      router.push('/supplier')
+      router.push('/expedition')
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -51,14 +51,14 @@ const onSubmit = async () => {
 <template>
   <div class="main-content-container">
     <div class="main-content-header">
-      <h1>Supplier</h1>
+      <h1>Expedition</h1>
       <base-divider orientation="horizontal" />
-      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Supplier', path: '/supplier' }, { name: 'Create' }]" />
+      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Expedition', path: '/expedition' }, { name: 'Create' }]" />
     </div>
     <div class="main-content-body">
       <div class="card card-template">
         <div class="card-header">
-          <h2>New Supplier</h2>
+          <h2>New Expedition</h2>
         </div>
         <div class="flex flex-col gap-4">
           <form @submit.prevent="onSubmit()" method="post" class="space-y-5">

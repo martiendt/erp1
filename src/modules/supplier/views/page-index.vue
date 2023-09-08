@@ -17,6 +17,7 @@ const isLoadingSearch = ref(false)
 
 export interface SupplierInterface {
   _id: string
+  code: string
   name: string
   address?: string
   phone?: string
@@ -132,6 +133,11 @@ const paginate = async (page: number) => {
                 <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
                   <th class="basic-table-head">
                     <div class="flex items-center justify-between">
+                      <p>Code</p>
+                    </div>
+                  </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
                       <p>Name</p>
                     </div>
                   </th>
@@ -155,6 +161,7 @@ const paginate = async (page: number) => {
               <tbody>
                 <template v-if="suppliers.length > 0">
                   <tr v-for="supplier in suppliers" :key="supplier._id" class="basic-table-row">
+                    <td class="basic-table-body">{{ supplier.code }}</td>
                     <td class="basic-table-body">
                       <router-link :to="`/supplier/${supplier._id}`" class="text-info">{{ supplier.name }}</router-link>
                     </td>

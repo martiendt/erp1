@@ -13,6 +13,7 @@ const router = useRouter()
 const _id = ref('')
 
 const form = ref({
+  code: '',
   name: '',
   address: '',
   phone: '',
@@ -25,6 +26,7 @@ onMounted(async () => {
 
     if (result.status === 200) {
       _id.value = result.data._id
+      form.value.code = result.data.code
       form.value.name = result.data.name
       form.value.address = result.data.address
       form.value.phone = result.data.phone
@@ -85,6 +87,7 @@ const onSubmit = async () => {
         <div class="flex flex-col gap-4">
           <form @submit.prevent="onSubmit()" class="space-y-5">
             <div class="space-y-2">
+              <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
               <component :is="BaseInput" v-model="form.address" label="Address"></component>
               <component :is="BaseInput" v-model="form.phone" label="Phone"></component>

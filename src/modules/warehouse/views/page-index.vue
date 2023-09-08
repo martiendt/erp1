@@ -17,6 +17,7 @@ const isLoadingSearch = ref(false)
 
 export interface WarehouseInterface {
   _id: string
+  code: string
   name: string
 }
 const warehouses = ref<WarehouseInterface[]>([])
@@ -28,6 +29,7 @@ const getWarehouses = async (page = 1, search = '') => {
       page: page,
       sort: 'name',
       filter: {
+        code: search,
         name: search
       }
     }
@@ -126,6 +128,11 @@ const paginate = async (page: number) => {
                 <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
                   <th class="basic-table-head">
                     <div class="flex items-center justify-between">
+                      <p>Code</p>
+                    </div>
+                  </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
                       <p>Name</p>
                     </div>
                   </th>
@@ -134,6 +141,11 @@ const paginate = async (page: number) => {
               <tbody>
                 <template v-if="warehouses.length > 0">
                   <tr v-for="warehouse in warehouses" :key="warehouse._id" class="basic-table-row">
+                    <td class="basic-table-body">
+                      <router-link :to="`/warehouse/${warehouse._id}`" class="text-info">{{
+                        warehouse.code
+                      }}</router-link>
+                    </td>
                     <td class="basic-table-body">
                       <router-link :to="`/warehouse/${warehouse._id}`" class="text-info">{{
                         warehouse.name
