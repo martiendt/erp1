@@ -17,6 +17,7 @@ const isLoadingSearch = ref(false)
 
 export interface branchInterface {
   _id: string
+  code: string
   name: string
 }
 const branches = ref<branchInterface[]>([])
@@ -28,6 +29,7 @@ const getbranches = async (page = 1, search = '') => {
       page: page,
       sort: 'name',
       filter: {
+        code: search,
         name: search
       }
     }
@@ -126,6 +128,11 @@ const paginate = async (page: number) => {
                 <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
                   <th class="basic-table-head">
                     <div class="flex items-center justify-between">
+                      <p>Code</p>
+                    </div>
+                  </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
                       <p>Name</p>
                     </div>
                   </th>
@@ -135,9 +142,10 @@ const paginate = async (page: number) => {
                 <template v-if="branches.length > 0">
                   <tr v-for="branch in branches" :key="branch._id" class="basic-table-row">
                     <td class="basic-table-body">
-                      <router-link :to="`/branch/${branch._id}`" class="text-info">{{
-                        branch.name
-                      }}</router-link>
+                      <router-link :to="`/branch/${branch._id}`" class="text-info">{{ branch.code }}</router-link>
+                    </td>
+                    <td class="basic-table-body">
+                      <router-link :to="`/branch/${branch._id}`" class="text-info">{{ branch.name }}</router-link>
                     </td>
                   </tr>
                 </template>

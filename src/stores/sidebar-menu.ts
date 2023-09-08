@@ -124,19 +124,9 @@ const menuMain = {
       allowed: ['administrator']
     },
     {
-      name: 'Supplier Group',
-      path: '/supplier-group',
-      allowed: ['administrator', 'admin purchasing', 'admin stock']
-    },
-    {
       name: 'Supplier',
       path: '/supplier',
       allowed: ['administrator', 'admin purchasing', 'admin stock']
-    },
-    {
-      name: 'Customer Group',
-      path: '/customer',
-      allowed: ['administrator', 'cashier']
     },
     {
       name: 'Customer',
@@ -152,11 +142,6 @@ const menuMain = {
       name: 'Item Category',
       path: '/item-category',
       allowed: ['administrator', 'admin purchasing', 'admin stock']
-    },
-    {
-      name: 'Item',
-      path: '/item',
-      allowed: ['administrator', 'admin purchasing']
     }
   ]
 }

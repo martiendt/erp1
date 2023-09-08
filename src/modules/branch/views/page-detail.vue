@@ -13,6 +13,7 @@ const router = useRouter()
 const { notification } = useBaseNotification()
 
 const form = ref({
+  code: '',
   name: ''
 })
 
@@ -21,6 +22,7 @@ onMounted(async () => {
     const result = await axios.get(`/v1/branches/${route.params.id}`)
 
     if (result.status === 200) {
+      form.value.code = result.data.code
       form.value.name = result.data.name
     } else {
       router.push('/404')
@@ -92,6 +94,7 @@ const onDelete = async () => {
         <div class="flex flex-col gap-4">
           <div class="space-y-5">
             <div class="space-y-2">
+              <component :is="BaseInput" readonly v-model="form.code" label="Code"></component>
               <component :is="BaseInput" readonly v-model="form.name" label="Name"></component>
             </div>
           </div>
