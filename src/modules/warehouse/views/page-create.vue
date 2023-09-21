@@ -26,6 +26,8 @@ const onSubmit = async () => {
       form.value.code = ''
       form.value.name = ''
       router.push('/warehouse')
+
+      notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

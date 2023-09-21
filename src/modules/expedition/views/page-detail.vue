@@ -39,8 +39,9 @@ const onDelete = async () => {
   if (confirm('Are you sure want to delete this data?')) {
     const result = await axios.delete(`/v1/expeditions/${route.params.id}`)
     if (result.status === 204) {
-      notification('', 'Delete expedition data success', { type: TypesEnum.Success })
       router.push('/expedition')
+
+      notification('', 'Delete expedition data success', { type: TypesEnum.Success })
     }
   }
 }

@@ -24,6 +24,8 @@ const onSubmit = async () => {
     if (response.status === 201) {
       form.value.name = ''
       router.push('/allocation')
+
+      notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

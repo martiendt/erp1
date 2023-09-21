@@ -33,8 +33,9 @@ const onDelete = async () => {
   if (confirm('Are you sure want to delete this data?')) {
     const result = await axios.delete(`/v1/item-categories/${route.params.id}`)
     if (result.status === 204) {
-      notification('', 'Delete item category data success', { type: TypesEnum.Success })
       router.push('/item-category')
+
+      notification('', 'Delete item category data success', { type: TypesEnum.Success })
     }
   }
 }

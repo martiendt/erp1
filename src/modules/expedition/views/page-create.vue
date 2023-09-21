@@ -32,6 +32,8 @@ const onSubmit = async () => {
       form.value.phone = ''
       form.value.email = ''
       router.push('/expedition')
+
+      notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -53,7 +55,10 @@ const onSubmit = async () => {
     <div class="main-content-header">
       <h1>Expedition</h1>
       <base-divider orientation="horizontal" />
-      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Expedition', path: '/expedition' }, { name: 'Create' }]" />
+      <component
+        :is="BaseBreadcrumb"
+        :breadcrumbs="[{ name: 'Expedition', path: '/expedition' }, { name: 'Create' }]"
+      />
     </div>
     <div class="main-content-body">
       <div class="card card-template">

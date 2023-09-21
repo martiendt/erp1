@@ -27,6 +27,8 @@ const onSubmit = async () => {
       form.value.name = ''
       form.value.sellingPrice = 0
       router.push('/item')
+
+      notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

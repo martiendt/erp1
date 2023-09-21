@@ -81,6 +81,8 @@ const onSubmit = async () => {
 
     if (response.status === 201) {
       router.push('/branch-expense')
+
+      notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

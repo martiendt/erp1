@@ -43,6 +43,8 @@ const onSubmit = async () => {
 
     if (response.status === 204) {
       router.push('/warehouse')
+
+      notification('', 'Update success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

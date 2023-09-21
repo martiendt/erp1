@@ -37,8 +37,9 @@ const onDelete = async () => {
     if (confirm('Are you sure want to delete this data?')) {
       const result = await axios.delete(`/v1/branches/${route.params.id}`)
       if (result.status === 204) {
-        notification('', 'Delete branch data success', { type: TypesEnum.Success })
         router.push('/branch')
+
+        notification('', 'Delete branch data success', { type: TypesEnum.Success })
       }
     }
   } catch (error) {

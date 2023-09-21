@@ -32,6 +32,8 @@ const onSubmit = async () => {
       form.value.phone = ''
       form.value.email = ''
       router.push('/supplier')
+
+      notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
