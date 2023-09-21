@@ -19,6 +19,10 @@ export interface WarehouseInterface {
   _id: string
   code: string
   name: string
+  branch: {
+    code: string
+    name: string
+  }
 }
 const warehouses = ref<WarehouseInterface[]>([])
 
@@ -136,6 +140,11 @@ const paginate = async (page: number) => {
                       <p>Name</p>
                     </div>
                   </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
+                      <p>Branch</p>
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -149,6 +158,11 @@ const paginate = async (page: number) => {
                     <td class="basic-table-body">
                       <router-link :to="`/warehouse/${warehouse._id}`" class="text-info">{{
                         warehouse.name
+                      }}</router-link>
+                    </td>
+                    <td class="basic-table-body">
+                      <router-link :to="`/warehouse/${warehouse._id}`" class="text-info">{{
+                        warehouse.branch?.name
                       }}</router-link>
                     </td>
                   </tr>

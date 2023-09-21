@@ -1,21 +1,33 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { AxiosError } from 'axios'
-import { BaseBreadcrumb, BaseDivider, BaseInput } from '@/components/index'
+import { BaseBreadcrumb, BaseDivider, BaseInput, BaseAutocomplete } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRouter } from 'vue-router'
 import axios from '@/axios'
+import { useBranchApi } from '../api/branch'
 
+const branchApi = useBranchApi()
 const { notification } = useBaseNotification()
 const router = useRouter()
 
 const form = ref({
+  branch_id: '',
   code: '',
   name: ''
 })
 
 const errors = ref()
 const isSubmitted = ref(false)
+const selectedBranch = ref<{ id: string; label: string }>()
+
+watch(selectedBranch, () => {
+  form.value.branch_id = selectedBranch.value?.id ?? ''
+})
+
+onMounted(async () => {
+  await branchApi.fetchListBranch()
+})
 
 const onSubmit = async () => {
   try {
@@ -23,6 +35,7 @@ const onSubmit = async () => {
     const response = await axios.post('/v1/warehouses', form.value)
 
     if (response.status === 201) {
+      form.value.branch_id = ''
       form.value.code = ''
       form.value.name = ''
       router.push('/warehouse')
@@ -59,6 +72,18 @@ const onSubmit = async () => {
         <div class="flex flex-col gap-4">
           <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
             <div class="space-y-2">
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold">
+                  Branch
+                  <span class="text-xs text-slate-400">(required)</span>
+                </label>
+                <component
+                  :is="BaseAutocomplete"
+                  required
+                  v-model="selectedBranch"
+                  :list="branchApi.listBranch.value"
+                ></component>
+              </div>
               <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
             </div>

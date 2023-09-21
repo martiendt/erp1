@@ -1,30 +1,48 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { AxiosError } from 'axios'
-import { BaseBreadcrumb, BaseDivider, BaseInput } from '@/components/index'
+import { BaseAutocomplete, BaseBreadcrumb, BaseDivider, BaseInput } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRoute, useRouter } from 'vue-router'
 import axios from '@/axios'
+import { useBranchApi } from '../api/branch'
 
+const branchApi = useBranchApi()
 const { notification } = useBaseNotification()
 const route = useRoute()
 const router = useRouter()
-
+const selectedBranch = ref<{ id: string; label: string }>()
 const _id = ref('')
 
 const form = ref({
   code: '',
-  name: ''
+  name: '',
+  branch_id: ''
+})
+
+watch(selectedBranch, () => {
+  form.value.branch_id = selectedBranch.value?.id ?? ''
+})
+
+onMounted(async () => {
+  await branchApi.fetchListBranch()
 })
 
 onMounted(async () => {
   try {
     const result = await axios.get(`/v1/warehouses/${route.params.id}`)
 
+    console.log(result)
+
     if (result.status === 200) {
       _id.value = result.data._id
       form.value.code = result.data.code
       form.value.name = result.data.name
+
+      if (result.data.branch) {
+        form.value.branch_id = result.data.branch._id
+        selectedBranch.value = { id: result.data.branch._id, label: result.data.branch.name }
+      }
     } else {
       router.push('/404')
     }
@@ -85,6 +103,18 @@ const onSubmit = async () => {
             <div class="space-y-2">
               <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold">
+                  Branch
+                  <span class="text-xs text-slate-400">(required)</span>
+                </label>
+                <component
+                  :is="BaseAutocomplete"
+                  required
+                  v-model="selectedBranch"
+                  :list="branchApi.listBranch.value"
+                ></component>
+              </div>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>
