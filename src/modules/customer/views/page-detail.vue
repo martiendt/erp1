@@ -36,13 +36,24 @@ onMounted(async () => {
 })
 
 const onDelete = async () => {
-  if (confirm('Are you sure want to delete this data?')) {
-    const result = await axios.delete(`/v1/customers/${route.params.id}`)
-    if (result.status === 204) {
-      router.push('/customer')
+  const password = prompt('Are you sure want to delete this data?')
 
-      notification('', 'Delete customer data success', { type: TypesEnum.Success })
+  if (password) {
+    const verifyPasswordResponse = await axios.post(`/v1/users/verify-password`, {
+      password: password
+    })
+
+    if (verifyPasswordResponse.status !== 204) {
+      notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
+      return
     }
+  }
+
+  const result = await axios.delete(`/v1/customers/${route.params.id}`)
+  if (result.status === 204) {
+    router.push('/customer')
+
+    notification('', 'Delete customer data success', { type: TypesEnum.Success })
   }
 }
 </script>
