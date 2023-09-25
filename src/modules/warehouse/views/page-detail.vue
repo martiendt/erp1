@@ -38,13 +38,25 @@ onMounted(async () => {
 
 const onDelete = async () => {
   try {
-    if (confirm('Are you sure want to delete this data?')) {
-      const result = await axios.delete(`/v1/warehouses/${route.params.id}`)
-      if (result.status === 204) {
-        router.push('/warehouse')
+    const password = prompt('Are you sure want to delete this data?')
 
-        notification('', 'Delete warehouse data success', { type: TypesEnum.Success })
+    if (password) {
+      const verifyPasswordResponse = await axios.post(`/v1/users/verify-password`, {
+        password: password
+      })
+
+      if (verifyPasswordResponse.status !== 204) {
+        notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
+        return
       }
+    }
+
+    const result = await axios.delete(`/v1/warehouses/${route.params.id}`)
+
+    if (result.status === 204) {
+      router.push('/warehouse')
+
+      notification('', 'Delete warehouse data success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
