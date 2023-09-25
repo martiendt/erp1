@@ -47,13 +47,15 @@ const onDelete = async () => {
       notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
       return
     }
-  }
 
-  const result = await axios.delete(`/v1/expeditions/${route.params.id}`)
-  if (result.status === 204) {
-    router.push('/expedition')
+    const result = await axios.delete(`/v1/expeditions/${route.params.id}`)
+    if (result.status === 204) {
+      router.push('/expedition')
 
-    notification('', 'Delete expedition data success', { type: TypesEnum.Success })
+      notification('', 'Delete expedition data success', { type: TypesEnum.Success })
+    }
+  } else {
+    notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
   }
 }
 </script>

@@ -49,14 +49,15 @@ const onDelete = async () => {
         notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
         return
       }
-    }
+      const result = await axios.delete(`/v1/warehouses/${route.params.id}`)
 
-    const result = await axios.delete(`/v1/warehouses/${route.params.id}`)
+      if (result.status === 204) {
+        router.push('/warehouse')
 
-    if (result.status === 204) {
-      router.push('/warehouse')
-
-      notification('', 'Delete warehouse data success', { type: TypesEnum.Success })
+        notification('', 'Delete warehouse data success', { type: TypesEnum.Success })
+      }
+    } else {
+      notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

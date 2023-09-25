@@ -46,18 +46,20 @@ const onDelete = async () => {
       const verifyPasswordResponse = await axios.post(`/v1/users/verify-password`, {
         password: password
       })
-
+      console.log('a')
       if (verifyPasswordResponse.status !== 204) {
         notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
         return
       }
-    }
 
-    const result = await axios.delete(`/v1/suppliers/${route.params.id}`)
-    if (result.status === 204) {
-      router.push('/supplier')
+      const result = await axios.delete(`/v1/suppliers/${route.params.id}`)
+      if (result.status === 204) {
+        router.push('/supplier')
 
-      notification('', 'Delete supplier data success', { type: TypesEnum.Success })
+        notification('', 'Delete supplier data success', { type: TypesEnum.Success })
+      }
+    } else {
+      notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
