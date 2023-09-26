@@ -14,7 +14,8 @@ const form = ref({
   name: '',
   address: '',
   phone: '',
-  email: ''
+  email: '',
+  notes: ''
 })
 
 const errors = ref()
@@ -31,6 +32,7 @@ const onSubmit = async () => {
       form.value.address = ''
       form.value.phone = ''
       form.value.email = ''
+      form.value.notes = ''
       router.push('/customer')
 
       notification('', 'Create success', { type: TypesEnum.Success })
@@ -70,6 +72,7 @@ const onSubmit = async () => {
               <component :is="BaseInput" v-model="form.address" label="Address"></component>
               <component :is="BaseInput" v-model="form.phone" label="Phone"></component>
               <component :is="BaseInput" v-model="form.email" label="Email"></component>
+              <component :is="BaseInput" v-model="form.notes" label="Notes"></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>

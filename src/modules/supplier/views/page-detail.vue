@@ -17,6 +17,7 @@ const form = ref({
   name: '',
   address: '',
   phone: '',
+  notes: '',
   email: ''
 })
 
@@ -30,6 +31,7 @@ onMounted(async () => {
       form.value.address = result.data.address
       form.value.phone = result.data.phone
       form.value.email = result.data.email
+      form.value.notes = result.data.notes
     } else {
       router.push('/404')
     }
@@ -119,6 +121,7 @@ const onDelete = async () => {
               <component :is="BaseInput" readonly v-model="form.address" label="Address"></component>
               <component :is="BaseInput" readonly v-model="form.phone" label="Phone"></component>
               <component :is="BaseInput" readonly v-model="form.email" label="Email"></component>
+              <component :is="BaseInput" readonly v-model="form.notes" label="Notes"></component>
             </div>
           </div>
         </div>
