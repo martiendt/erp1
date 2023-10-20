@@ -106,7 +106,7 @@ const onSubmit = async () => {
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Branch
-                  <span class="text-xs text-slate-400">(required)</span>
+                  <span class="text-xs text-slate-400">*</span>
                 </label>
                 <component
                   :is="BaseAutocomplete"

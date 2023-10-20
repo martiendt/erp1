@@ -154,7 +154,7 @@ const paginate = async (page: number) => {
               <div class="flex flex-col items-start">
                 <label class="text-sm font-bold">
                   Warehouse
-                  <span class="text-xs text-slate-400">(required)</span>
+                  <span class="text-xs text-slate-400">*</span>
                 </label>
                 <component
                   :is="BaseAutocomplete"

@@ -128,7 +128,7 @@ const onSubmit = async () => {
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Role
-                  <span class="text-xs text-slate-400">(required)</span>
+                  <span class="text-xs text-slate-400">*</span>
                 </label>
                 <component :is="BaseSelect" v-model="selectedRole" :list="list"></component>
               </div>
@@ -136,7 +136,7 @@ const onSubmit = async () => {
             <div class="flex flex-col items-start gap-1">
               <label class="text-sm font-bold">
                 Warehouse
-                <span class="text-xs text-slate-400">(required)</span>
+                <span class="text-xs text-slate-400">*</span>
               </label>
               <component
                 :is="BaseAutocomplete"
@@ -148,7 +148,7 @@ const onSubmit = async () => {
             <div class="flex flex-col items-start gap-1">
               <label class="text-sm font-bold">
                 Branch
-                <span class="text-xs text-slate-400">(required)</span>
+                <span class="text-xs text-slate-400">*</span>
               </label>
               <component
                 :is="BaseAutocomplete"

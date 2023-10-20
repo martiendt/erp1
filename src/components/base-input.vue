@@ -72,7 +72,7 @@ onMounted(() => {
       }"
     >
       {{ label }}
-      <span v-if="props.required" class="text-xs text-slate-400">(required)</span>
+      <span v-if="props.required" class="text-xs text-slate-400">*</span>
       <span v-if="props.description" class="text-xs font-light text-slate-500">
         {{ props.description }}
       </span>

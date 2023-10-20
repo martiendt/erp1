@@ -105,14 +105,14 @@ onMounted(async () => {
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Role
-                  <span class="text-xs text-slate-400">(required)</span>
+                  <span class="text-xs text-slate-400">*</span>
                 </label>
                 <component :is="BaseSelect" v-model="selectedRole" required :list="list"></component>
               </div>
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Branch
-                  <span class="text-xs text-slate-400">(required)</span>
+                  <span class="text-xs text-slate-400">*</span>
                 </label>
                 <component
                   :is="BaseAutocomplete"
@@ -124,7 +124,7 @@ onMounted(async () => {
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Warehouse
-                  <span class="text-xs text-slate-400">(required)</span>
+                  <span class="text-xs text-slate-400">*</span>
                 </label>
                 <component
                   :is="BaseAutocomplete"

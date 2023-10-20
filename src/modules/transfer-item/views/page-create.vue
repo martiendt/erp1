@@ -203,7 +203,7 @@ const onSubmit = async () => {
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Warehouse Origin
-                  <span class="text-xs text-slate-400">(required)</span>
+                  <span class="text-xs text-slate-400">*</span>
                 </label>
                 <component
                   :is="BaseAutocomplete"
@@ -215,7 +215,7 @@ const onSubmit = async () => {
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Warehouse Destination
-                  <span class="text-xs text-slate-400">(required)</span>
+                  <span class="text-xs text-slate-400">*</span>
                 </label>
                 <component
                   :is="BaseAutocomplete"
@@ -227,7 +227,7 @@ const onSubmit = async () => {
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Item
-                  <span class="text-xs text-slate-400">(required)</span>
+                  <span class="text-xs text-slate-400">*</span>
                 </label>
                 <component
                   :is="BaseInput"
