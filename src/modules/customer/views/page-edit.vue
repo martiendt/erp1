@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { AxiosError } from 'axios'
-import { BaseBreadcrumb, BaseDivider, BaseInput } from '@/components/index'
+import { BaseBreadcrumb, BaseDivider, BaseInput, BaseNumeric } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRoute, useRouter } from 'vue-router'
 import axios from '@/axios'
@@ -18,7 +18,12 @@ const form = ref({
   address: '',
   phone: '',
   email: '',
-  notes: ''
+  notes: '',
+  bankBranch: '',
+  bankName: '',
+  accountName: '',
+  accountNumber: '',
+  creditLimit: 0
 })
 
 onMounted(async () => {
@@ -33,6 +38,12 @@ onMounted(async () => {
       form.value.phone = result.data.phone
       form.value.email = result.data.email
       form.value.notes = result.data.notes
+
+      form.value.bankBranch = result.data.bankBranch
+      form.value.bankName = result.data.bankName
+      form.value.accountName = result.data.accountName
+      form.value.accountNumber = result.data.accountNumber
+      form.value.creditLimit = result.data.creditLimit
     } else {
       router.push('/404')
     }
@@ -57,7 +68,9 @@ const onSubmit = async () => {
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       errors.value = error.response?.data.errors
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      for (const [key, value] of Object.entries(error.response?.data.errors)) {
+        notification(error.response?.statusText, value as string, { type: TypesEnum.Warning })
+      }
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {
@@ -97,6 +110,21 @@ const onSubmit = async () => {
               <component :is="BaseInput" v-model="form.phone" label="Phone"></component>
               <component :is="BaseInput" v-model="form.email" label="Email"></component>
               <component :is="BaseInput" v-model="form.notes" label="Notes"></component>
+            </div>
+            <div class="pt-5 space-y-2">
+              <h2>Bank Information</h2>
+              <component :is="BaseInput" v-model="form.bankName" label="Bank Name"></component>
+              <component :is="BaseInput" v-model="form.bankBranch" label="Bank Branch"></component>
+              <component :is="BaseInput" v-model="form.accountName" label="Account Name"></component>
+              <component :is="BaseInput" v-model="form.accountNumber" label="Account Number"></component>
+            </div>
+            <div class="pt-5 space-y-2">
+              <h2>Credit Limit</h2>
+              <p class="text-slate-500">
+                To inform maximum credit limit for each customer so that when making a sale user can know the maximum
+                credit amount must be given.
+              </p>
+              <component :is="BaseNumeric" v-model="form.creditLimit" label=""></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>
