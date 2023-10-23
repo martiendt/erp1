@@ -7,6 +7,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import axios from '@/axios'
 import BaseModal from '@/components/base-modal.vue'
+import { AxiosError } from 'axios'
 
 const showModal = ref(false)
 
@@ -72,7 +73,19 @@ const onDelete = async () => {
         notification('', 'Delete customer data success', { type: TypesEnum.Success })
       }
     } catch (error) {
-      notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
+      if (error instanceof AxiosError && error.response) {
+        if (error.response.status === 401) {
+          notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
+        } else {
+          notification('Delete Failed', 'Cannot delete this data because used by other module', {
+            type: TypesEnum.Warning
+          })
+        }
+      } else if (error instanceof AxiosError) {
+        notification(error.code as string, error.message, { type: TypesEnum.Warning })
+      } else {
+        notification('Unknown Error', '', { type: TypesEnum.Warning })
+      }
     }
   } else {
     notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })

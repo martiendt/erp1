@@ -74,7 +74,19 @@ const onDelete = async () => {
       notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
     }
   } catch (error) {
-    notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
+    if (error instanceof AxiosError && error.response) {
+      if (error.response.status === 401) {
+        notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
+      } else {
+        notification('Delete Failed', 'Cannot delete this data because used by other module', {
+          type: TypesEnum.Warning
+        })
+      }
+    } else if (error instanceof AxiosError) {
+      notification(error.code as string, error.message, { type: TypesEnum.Warning })
+    } else {
+      notification('Unknown Error', '', { type: TypesEnum.Warning })
+    }
   }
 }
 </script>
