@@ -15,7 +15,11 @@ const form = ref({
   address: '',
   phone: '',
   notes: '',
-  email: ''
+  email: '',
+  bankName: '',
+  bankBranch: '',
+  accountName: '',
+  accountNumber: ''
 })
 
 const errors = ref()
@@ -33,14 +37,20 @@ const onSubmit = async () => {
       form.value.phone = ''
       form.value.email = ''
       form.value.notes = ''
-      router.push('/supplier')
+      form.value.bankName = ''
+      form.value.bankBranch = ''
+      form.value.accountName = ''
+      form.value.accountNumber = ''
+      router.push('/supplier/' + response.data._id)
 
       notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       errors.value = error.response?.data.errors
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      for (const [key, value] of Object.entries(error.response?.data.errors)) {
+        notification(error.response?.statusText, value as string, { type: TypesEnum.Warning })
+      }
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {
@@ -73,6 +83,13 @@ const onSubmit = async () => {
               <component :is="BaseInput" v-model="form.phone" label="Phone"></component>
               <component :is="BaseInput" v-model="form.email" label="Email"></component>
               <component :is="BaseInput" v-model="form.notes" label="Notes"></component>
+            </div>
+            <div class="pt-5 space-y-2">
+              <h2>Bank Information</h2>
+              <component :is="BaseInput" v-model="form.bankName" label="Bank Name"></component>
+              <component :is="BaseInput" v-model="form.bankBranch" label="Bank Branch"></component>
+              <component :is="BaseInput" v-model="form.accountName" label="Account Name"></component>
+              <component :is="BaseInput" v-model="form.accountNumber" label="Account Number"></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>

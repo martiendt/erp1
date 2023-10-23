@@ -18,7 +18,11 @@ const form = ref({
   address: '',
   phone: '',
   email: '',
-  notes: ''
+  notes: '',
+  bankBranch: '',
+  bankName: '',
+  accountName: '',
+  accountNumber: ''
 })
 
 onMounted(async () => {
@@ -33,6 +37,10 @@ onMounted(async () => {
       form.value.phone = result.data.phone
       form.value.email = result.data.email
       form.value.notes = result.data.notes
+      form.value.bankBranch = result.data.bankBranch
+      form.value.bankName = result.data.bankName
+      form.value.accountName = result.data.accountName
+      form.value.accountNumber = result.data.accountNumber
     } else {
       router.push('/404')
     }
@@ -57,7 +65,9 @@ const onSubmit = async () => {
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       errors.value = error.response?.data.errors
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      for (const [key, value] of Object.entries(error.response?.data.errors)) {
+        notification(error.response?.statusText, value as string, { type: TypesEnum.Warning })
+      }
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {
@@ -97,6 +107,13 @@ const onSubmit = async () => {
               <component :is="BaseInput" v-model="form.phone" label="Phone"></component>
               <component :is="BaseInput" v-model="form.email" label="Email"></component>
               <component :is="BaseInput" v-model="form.notes" label="Notes"></component>
+            </div>
+            <div class="pt-5 space-y-2">
+              <h2>Bank Information</h2>
+              <component :is="BaseInput" v-model="form.bankName" label="Bank Name"></component>
+              <component :is="BaseInput" v-model="form.bankBranch" label="Bank Branch"></component>
+              <component :is="BaseInput" v-model="form.accountName" label="Account Name"></component>
+              <component :is="BaseInput" v-model="form.accountNumber" label="Account Number"></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>

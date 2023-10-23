@@ -7,6 +7,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import axios from '@/axios'
 import { AxiosError } from 'axios'
+import BaseModal from '@/components/base-modal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -18,7 +19,11 @@ const form = ref({
   address: '',
   phone: '',
   notes: '',
-  email: ''
+  email: '',
+  bankBranch: '',
+  bankName: '',
+  accountName: '',
+  accountNumber: ''
 })
 
 onMounted(async () => {
@@ -32,6 +37,10 @@ onMounted(async () => {
       form.value.phone = result.data.phone
       form.value.email = result.data.email
       form.value.notes = result.data.notes
+      form.value.bankBranch = result.data.bankBranch
+      form.value.bankName = result.data.bankName
+      form.value.accountName = result.data.accountName
+      form.value.accountNumber = result.data.accountNumber
     } else {
       router.push('/404')
     }
@@ -40,15 +49,16 @@ onMounted(async () => {
   }
 })
 
-const onDelete = async () => {
-  try {
-    const password = prompt('Are you sure want to delete this data?')
+const passwordConfirmation = ref('')
+const showModal = ref(false)
 
-    if (password) {
+const onDelete = async () => {
+  showModal.value = false
+  try {
+    if (passwordConfirmation.value) {
       const verifyPasswordResponse = await axios.post(`/v1/users/verify-password`, {
-        password: password
+        password: passwordConfirmation.value
       })
-      console.log('a')
       if (verifyPasswordResponse.status !== 204) {
         notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
         return
@@ -64,13 +74,7 @@ const onDelete = async () => {
       notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
     }
   } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
-    } else if (error instanceof AxiosError) {
-      notification(error.code as string, error.message, { type: TypesEnum.Warning })
-    } else {
-      notification('Unknown Error', '', { type: TypesEnum.Warning })
-    }
+    notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
   }
 }
 </script>
@@ -106,10 +110,22 @@ const onDelete = async () => {
               </router-link>
             </div>
             <div>
-              <button @click="onDelete()" type="button" class="btn btn-danger btn-sm rounded-none space-x-1">
+              <button @click="showModal = true" type="button" class="btn btn-danger btn-sm rounded-none space-x-1">
                 <i class="i-far-trash block"></i>
                 <span>Delete</span>
               </button>
+              <component :is="BaseModal" :is-open="showModal" @on-close="showModal = false">
+                <template #content>
+                  <div class="max-h-90vh overflow-auto p-4">
+                    <h2 class="py-4 text-2xl font-bold">Delete Confirmation</h2>
+                    <div class="space-y-8">
+                      Please input your password to verify this action
+                      <component :is="BaseInput" v-model="passwordConfirmation" type="password" label=""></component>
+                      <button class="btn btn-danger btn-block" @click="onDelete()">Delete</button>
+                    </div>
+                  </div>
+                </template>
+              </component>
             </div>
           </div>
         </div>
@@ -122,6 +138,13 @@ const onDelete = async () => {
               <component :is="BaseInput" readonly v-model="form.phone" label="Phone"></component>
               <component :is="BaseInput" readonly v-model="form.email" label="Email"></component>
               <component :is="BaseInput" readonly v-model="form.notes" label="Notes"></component>
+            </div>
+            <div class="pt-5 space-y-2">
+              <h2>Bank Information</h2>
+              <component :is="BaseInput" v-model="form.bankName" label="Bank Name"></component>
+              <component :is="BaseInput" v-model="form.bankBranch" label="Bank Branch"></component>
+              <component :is="BaseInput" v-model="form.accountName" label="Account Name"></component>
+              <component :is="BaseInput" v-model="form.accountNumber" label="Account Number"></component>
             </div>
           </div>
         </div>
