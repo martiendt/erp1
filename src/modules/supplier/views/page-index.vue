@@ -32,6 +32,7 @@ const getSuppliers = async (page = 1, search = '') => {
       page: page,
       sort: 'name',
       filter: {
+        code: search,
         name: search,
         address: search,
         phone: search,
