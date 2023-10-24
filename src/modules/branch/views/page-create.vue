@@ -25,14 +25,16 @@ const onSubmit = async () => {
     if (response.status === 201) {
       form.value.code = ''
       form.value.name = ''
-      router.push('/branch')
+      router.push('/branch/' + response.data._id)
 
       notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       errors.value = error.response?.data.errors
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      for (const [key, value] of Object.entries(error.response?.data.errors)) {
+        notification(error.response?.statusText, value as string, { type: TypesEnum.Warning })
+      }
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {

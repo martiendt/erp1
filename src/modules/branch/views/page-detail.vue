@@ -7,7 +7,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { AxiosError } from 'axios'
 import axios from '@/axios'
+import BaseModal from '@/components/base-modal.vue'
 
+const showModal = ref(false)
+const passwordConfirmation = ref('')
 const route = useRoute()
 const router = useRouter()
 const { notification } = useBaseNotification()
@@ -34,11 +37,10 @@ onMounted(async () => {
 
 const onDelete = async () => {
   try {
-    const password = prompt('Are you sure want to delete this data?')
-
-    if (password) {
+    showModal.value = false
+    if (passwordConfirmation.value) {
       const verifyPasswordResponse = await axios.post(`/v1/users/verify-password`, {
-        password: password
+        password: passwordConfirmation.value
       })
 
       if (verifyPasswordResponse.status !== 204) {
@@ -56,7 +58,9 @@ const onDelete = async () => {
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      for (const [key, value] of Object.entries(error.response?.data.errors)) {
+        notification(error.response?.statusText, value as string, { type: TypesEnum.Warning })
+      }
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {
@@ -97,10 +101,22 @@ const onDelete = async () => {
               </router-link>
             </div>
             <div>
-              <button @click="onDelete()" type="button" class="btn btn-danger btn-sm rounded-none space-x-1">
+              <button @click="showModal = true" type="button" class="btn btn-danger btn-sm rounded-none space-x-1">
                 <i class="i-far-trash block"></i>
                 <span>Delete</span>
               </button>
+              <component :is="BaseModal" :is-open="showModal" @on-close="showModal = false">
+                <template #content>
+                  <div class="max-h-90vh overflow-auto p-4">
+                    <h2 class="py-4 text-2xl font-bold">Delete Confirmation</h2>
+                    <div class="space-y-8">
+                      Please input your password to verify this action
+                      <component :is="BaseInput" v-model="passwordConfirmation" type="password" label=""></component>
+                      <button class="btn btn-danger btn-block" @click="onDelete()">Delete</button>
+                    </div>
+                  </div>
+                </template>
+              </component>
             </div>
           </div>
         </div>
