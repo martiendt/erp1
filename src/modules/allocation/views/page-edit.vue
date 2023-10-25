@@ -40,14 +40,16 @@ const onSubmit = async () => {
     const response = await axios.patch(`/v1/allocations/${_id.value}`, form.value)
 
     if (response.status === 204) {
-      router.push('/allocation')
+      router.push('/allocation/' + route.params.id)
 
       notification('', 'Update success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       errors.value = error.response?.data.errors
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      for (const [key, value] of Object.entries(error.response?.data.errors)) {
+        notification(error.response?.statusText, value as string, { type: TypesEnum.Warning })
+      }
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {

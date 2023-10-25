@@ -3,10 +3,11 @@ import { ref } from 'vue'
 import { AxiosError } from 'axios'
 import { BaseBreadcrumb, BaseDivider, BaseInput } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import axios from '@/axios'
 
 const { notification } = useBaseNotification()
+const route = useRoute()
 const router = useRouter()
 
 const form = ref({
@@ -23,14 +24,16 @@ const onSubmit = async () => {
 
     if (response.status === 201) {
       form.value.name = ''
-      router.push('/allocation')
+      router.push('/allocation/' + response.data._id)
 
       notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       errors.value = error.response?.data.errors
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      for (const [key, value] of Object.entries(error.response?.data.errors)) {
+        notification(error.response?.statusText, value as string, { type: TypesEnum.Warning })
+      }
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {
