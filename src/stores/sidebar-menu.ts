@@ -124,6 +124,11 @@ const menuMain = {
       allowed: ['administrator']
     },
     {
+      name: 'Allocation Group',
+      path: '/allocation-group',
+      allowed: ['administrator', 'admin purchasing', 'admin stock']
+    },
+    {
       name: 'Allocation',
       path: '/allocation',
       allowed: ['administrator', 'admin purchasing', 'admin stock']
