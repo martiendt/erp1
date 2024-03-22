@@ -109,49 +109,71 @@ const menuMain = {
       allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
     },
     {
-      name: 'User',
-      path: '/user',
-      allowed: ['administrator']
+      name: 'Master',
+      submenu: [
+        {
+          name: 'User',
+          path: '/user',
+          allowed: ['administrator']
+        },
+        {
+          name: 'Branch',
+          path: '/branch',
+          allowed: ['administrator']
+        },
+        {
+          name: 'Warehouse',
+          path: '/warehouse',
+          allowed: ['administrator']
+        },
+        {
+          name: 'Allocation Group',
+          path: '/allocation-group',
+          allowed: ['administrator', 'admin purchasing', 'admin stock']
+        },
+        {
+          name: 'Allocation',
+          path: '/allocation',
+          allowed: ['administrator', 'admin purchasing', 'admin stock']
+        },
+        {
+          name: 'Supplier',
+          path: '/supplier',
+          allowed: ['administrator', 'admin purchasing', 'admin stock']
+        },
+        {
+          name: 'Customer',
+          path: '/customer',
+          allowed: ['administrator', 'cashier']
+        },
+        {
+          name: 'Expedition',
+          path: '/expedition',
+          allowed: ['administrator', 'cashier']
+        },
+        {
+          name: 'Item Category',
+          path: '/item-category',
+          allowed: ['administrator', 'admin purchasing', 'admin stock']
+        }
+      ],
+      allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
     },
     {
-      name: 'Branch',
-      path: '/branch',
-      allowed: ['administrator']
-    },
-    {
-      name: 'Warehouse',
-      path: '/warehouse',
-      allowed: ['administrator']
-    },
-    {
-      name: 'Allocation Group',
-      path: '/allocation-group',
-      allowed: ['administrator', 'admin purchasing', 'admin stock']
-    },
-    {
-      name: 'Allocation',
-      path: '/allocation',
-      allowed: ['administrator', 'admin purchasing', 'admin stock']
-    },
-    {
-      name: 'Supplier',
-      path: '/supplier',
-      allowed: ['administrator', 'admin purchasing', 'admin stock']
-    },
-    {
-      name: 'Customer',
-      path: '/customer',
-      allowed: ['administrator', 'cashier']
-    },
-    {
-      name: 'Expedition',
-      path: '/expedition',
-      allowed: ['administrator', 'cashier']
-    },
-    {
-      name: 'Item Category',
-      path: '/item-category',
-      allowed: ['administrator', 'admin purchasing', 'admin stock']
+      name: 'Manufacture',
+      submenu: [
+        {
+          name: 'Machine',
+          path: '/machine',
+          allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
+        },
+        {
+          name: 'Process',
+          path: '/process',
+          allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
+        }
+      ],
+      allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
     }
   ]
 }

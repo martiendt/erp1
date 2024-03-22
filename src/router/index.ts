@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import { routes as mainRoutes } from '@/modules/main/routes'
+import { routes as processRoutes } from '@/modules/process/routes'
+import { routes as machineRoutes } from '@/modules/machine/routes'
 import { routes as allocationRoutes } from '@/modules/allocation/routes'
 import { routes as allocationGroupRoutes } from '@/modules/allocation-group/routes'
 import { routes as authenticationRoutes } from '@/modules/authentication/routes'
@@ -24,6 +26,8 @@ import { routes as posRoutes } from '@/modules/pos/routes'
 
 const routes = [
   mainRoutes,
+  processRoutes,
+  machineRoutes,
   allocationRoutes,
   allocationGroupRoutes,
   authenticationRoutes,
