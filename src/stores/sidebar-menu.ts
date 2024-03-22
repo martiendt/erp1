@@ -106,7 +106,7 @@ const menuMain = {
     {
       name: 'Dashboard',
       path: '/dashboard',
-      allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
+      allowed: ['administrator']
     },
     {
       name: 'Master',
@@ -129,17 +129,17 @@ const menuMain = {
         {
           name: 'Allocation Group',
           path: '/allocation-group',
-          allowed: ['administrator', 'admin purchasing', 'admin stock']
+          allowed: ['administrator']
         },
         {
           name: 'Allocation',
           path: '/allocation',
-          allowed: ['administrator', 'admin purchasing', 'admin stock']
+          allowed: ['administrator']
         },
         {
           name: 'Supplier',
           path: '/supplier',
-          allowed: ['administrator', 'admin purchasing', 'admin stock']
+          allowed: ['administrator']
         },
         {
           name: 'Customer',
@@ -149,15 +149,15 @@ const menuMain = {
         {
           name: 'Expedition',
           path: '/expedition',
-          allowed: ['administrator', 'cashier']
+          allowed: ['administrator']
         },
         {
           name: 'Item Category',
           path: '/item-category',
-          allowed: ['administrator', 'admin purchasing', 'admin stock']
+          allowed: ['administrator']
         }
       ],
-      allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
+      allowed: ['administrator']
     },
     {
       name: 'Manufacture',
@@ -165,15 +165,15 @@ const menuMain = {
         {
           name: 'Machine',
           path: '/machine',
-          allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
+          allowed: ['administrator']
         },
         {
           name: 'Process',
           path: '/process',
-          allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
+          allowed: ['administrator']
         }
       ],
-      allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
+      allowed: ['administrator']
     }
   ]
 }
