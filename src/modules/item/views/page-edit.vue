@@ -1,42 +1,34 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { AxiosError } from 'axios'
-import { BaseAutocomplete, BaseBreadcrumb, BaseDivider, BaseInput, BaseNumeric } from '@/components/index'
+import { BaseBreadcrumb, BaseDivider, BaseInput, BaseNumeric } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRoute, useRouter } from 'vue-router'
-import { useItemCategoryApi } from '../api/item-category'
 import axios from '@/axios'
 
 const { notification } = useBaseNotification()
 const route = useRoute()
 const router = useRouter()
-const itemCategoryApi = useItemCategoryApi()
 
 const _id = ref('')
 
 const form = ref({
+  code: '',
   name: '',
-  itemCategory_id: '',
-  sellingPrice: 0
-})
-const selectedItemCategory = ref<{ id: string; label: string }>()
-watch(selectedItemCategory, () => {
-  form.value.itemCategory_id = selectedItemCategory.value?.id ?? ''
+  unit: '',
+  notes: ''
 })
 
 onMounted(async () => {
   try {
-    itemCategoryApi.fetchListItemCategory()
-
     const result = await axios.get(`/v1/items/${route.params.id}`)
 
     if (result.status === 200) {
       _id.value = result.data._id
+      form.value.code = result.data.code
       form.value.name = result.data.name
-      form.value.itemCategory_id = result.data.itemCategory._id
-      form.value.sellingPrice = result.data.sellingPrice
-
-      selectedItemCategory.value = { id: result.data.itemCategory._id, label: result.data.itemCategory.name }
+      form.value.unit = result.data.unit
+      form.value.notes = result.data.notes
     } else {
       router.push('/404')
     }
@@ -61,7 +53,9 @@ const onSubmit = async () => {
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       errors.value = error.response?.data.errors
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      for (const [key, value] of Object.entries(error.response?.data.errors)) {
+        notification(error.response?.statusText, value as string, { type: TypesEnum.Warning })
+      }
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {
@@ -95,21 +89,12 @@ const onSubmit = async () => {
         <div class="flex flex-col gap-4">
           <form @submit.prevent="onSubmit()" class="space-y-5">
             <div class="space-y-2">
+              <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
-              <div class="flex flex-col items-start gap-1">
-                <label class="text-sm font-bold">
-                  Item Category
-                  <span class="text-xs text-slate-400">*</span>
-                </label>
-                <component
-                  :is="BaseAutocomplete"
-                  required
-                  v-model="selectedItemCategory"
-                  :list="itemCategoryApi.listItemCategory.value"
-                ></component>
-              </div>
-              <component :is="BaseNumeric" required v-model="form.sellingPrice" label="Selling Price"></component>
+              <component :is="BaseInput" v-model="form.unit" label="Unit"></component>
+              <component :is="BaseInput" v-model="form.notes" label="Notes"></component>
             </div>
+
             <button class="btn btn-primary">Submit</button>
           </form>
         </div>

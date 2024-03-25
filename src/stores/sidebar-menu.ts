@@ -137,6 +137,11 @@ const menuMain = {
           allowed: ['administrator']
         },
         {
+          name: 'Item',
+          path: '/item',
+          allowed: ['administrator']
+        },
+        {
           name: 'Supplier',
           path: '/supplier',
           allowed: ['administrator']

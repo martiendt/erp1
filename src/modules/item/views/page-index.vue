@@ -4,13 +4,11 @@ import { BaseBreadcrumb } from '@/components/index'
 import { BaseDivider } from '@/components/index'
 import { BaseInput } from '@/components/index'
 import { watchDebounced } from '@vueuse/core'
-import { useNumeric } from '@/composable/numeric'
 import { usePagination } from '@/composable/pagination'
 import { useRoute, useRouter } from 'vue-router'
 import axios from '@/axios'
 
 const pagination = usePagination()
-const numeric = useNumeric()
 const route = useRoute()
 const router = useRouter()
 
@@ -19,14 +17,9 @@ const isLoadingSearch = ref(false)
 
 export interface ItemInterface {
   _id: string
+  code: string
   name: string
-  size: string
-  color: string
-  barcode: string
-  itemCategory: {
-    name: string
-  }
-  sellingPrice: number
+  unit?: string
 }
 const items = ref<ItemInterface[]>([])
 
@@ -37,7 +30,9 @@ const getItems = async (page = 1, search = '') => {
       page: page,
       sort: 'name',
       filter: {
-        name: search
+        code: search,
+        name: search,
+        unit: search
       }
     }
   })
@@ -118,6 +113,10 @@ const paginate = async (page: number) => {
         <div class="flex flex-col gap-4">
           <div class="w-full flex items-center gap-4">
             <div class="w-full flex space-x-2">
+              <router-link to="/item/create" class="btn btn-secondary rounded-none space-x-1">
+                <i class="i-far-pen-to-square block"></i>
+                <p>Add New</p>
+              </router-link>
               <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
@@ -131,27 +130,29 @@ const paginate = async (page: number) => {
                 <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
                   <th class="basic-table-head">
                     <div class="flex items-center justify-between">
+                      <p>Code</p>
+                    </div>
+                  </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
                       <p>Name</p>
                     </div>
                   </th>
-                  <th class="basic-table-head">Color</th>
-                  <th class="basic-table-head">Size</th>
-                  <th class="basic-table-head">Category</th>
-                  <th class="basic-table-head">Barcode</th>
-                  <th class="basic-table-head text-right">Selling Price</th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
+                      <p>Unit</p>
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <template v-if="items.length > 0">
                   <tr v-for="item in items" :key="item._id" class="basic-table-row">
+                    <td class="basic-table-body">{{ item.code }}</td>
                     <td class="basic-table-body">
                       <router-link :to="`/item/${item._id}`" class="text-info">{{ item.name }}</router-link>
                     </td>
-                    <td class="basic-table-body">{{ item.color }}</td>
-                    <td class="basic-table-body">{{ item.size }}</td>
-                    <td class="basic-table-body">{{ item.itemCategory.name }}</td>
-                    <td class="basic-table-body">{{ item.barcode }}</td>
-                    <td class="basic-table-body text-right">{{ numeric.format(item.sellingPrice) }}</td>
+                    <td class="basic-table-body">{{ item.unit }}</td>
                   </tr>
                 </template>
               </tbody>

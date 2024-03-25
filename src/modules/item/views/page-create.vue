@@ -10,8 +10,10 @@ const { notification } = useBaseNotification()
 const router = useRouter()
 
 const form = ref({
+  code: '',
   name: '',
-  sellingPrice: 0
+  unit: '',
+  notes: ''
 })
 
 const errors = ref()
@@ -20,20 +22,24 @@ const isSubmitted = ref(false)
 const onSubmit = async () => {
   try {
     isSubmitted.value = true
-
     const response = await axios.post('/v1/items', form.value)
 
     if (response.status === 201) {
+      form.value.code = ''
       form.value.name = ''
-      form.value.sellingPrice = 0
-      router.push('/item')
+      form.value.unit = ''
+      form.value.notes = ''
+
+      router.push('/item/' + response.data._id)
 
       notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       errors.value = error.response?.data.errors
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      for (const [key, value] of Object.entries(error.response?.data.errors)) {
+        notification(error.response?.statusText, value as string, { type: TypesEnum.Warning })
+      }
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {
@@ -60,8 +66,10 @@ const onSubmit = async () => {
         <div class="flex flex-col gap-4">
           <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
             <div class="space-y-2">
+              <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
-              <component :is="BaseNumeric" v-model="form.sellingPrice" label="Selling Price"></component>
+              <component :is="BaseInput" v-model="form.unit" label="Unit"></component>
+              <component :is="BaseInput" v-model="form.notes" label="Notes"></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>
