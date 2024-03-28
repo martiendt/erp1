@@ -19,6 +19,8 @@ export interface branchInterface {
   _id: string
   code: string
   name: string
+  address: string
+  phone: string
 }
 const branches = ref<branchInterface[]>([])
 
@@ -30,7 +32,9 @@ const getbranches = async (page = 1, search = '') => {
       sort: 'name',
       filter: {
         code: search,
-        name: search
+        name: search,
+        address: search,
+        phone: search
       }
     }
   })
@@ -136,6 +140,16 @@ const paginate = async (page: number) => {
                       <p>Name</p>
                     </div>
                   </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
+                      <p>Address</p>
+                    </div>
+                  </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
+                      <p>Phone</p>
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -146,6 +160,12 @@ const paginate = async (page: number) => {
                     </td>
                     <td class="basic-table-body">
                       <router-link :to="`/branch/${branch._id}`" class="text-info">{{ branch.name }}</router-link>
+                    </td>
+                    <td class="basic-table-body">
+                      {{ branch.address }}
+                    </td>
+                    <td class="basic-table-body">
+                      {{ branch.phone }}
                     </td>
                   </tr>
                 </template>

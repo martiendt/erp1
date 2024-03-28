@@ -17,7 +17,9 @@ const { notification } = useBaseNotification()
 
 const form = ref({
   code: '',
-  name: ''
+  name: '',
+  address: '',
+  phone: ''
 })
 
 onMounted(async () => {
@@ -27,6 +29,8 @@ onMounted(async () => {
     if (result.status === 200) {
       form.value.code = result.data.code
       form.value.name = result.data.name
+      form.value.address = result.data.address
+      form.value.phone = result.data.phone
     } else {
       router.push('/404')
     }
@@ -125,6 +129,8 @@ const onDelete = async () => {
             <div class="space-y-2">
               <component :is="BaseInput" readonly v-model="form.code" label="Code"></component>
               <component :is="BaseInput" readonly v-model="form.name" label="Name"></component>
+              <component :is="BaseInput" readonly v-model="form.address" label="Address"></component>
+              <component :is="BaseInput" readonly v-model="form.phone" label="Phone"></component>
             </div>
           </div>
         </div>

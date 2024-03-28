@@ -11,7 +11,9 @@ const router = useRouter()
 
 const form = ref({
   code: '',
-  name: ''
+  name: '',
+  address: '',
+  phone: ''
 })
 
 const errors = ref()
@@ -25,6 +27,8 @@ const onSubmit = async () => {
     if (response.status === 201) {
       form.value.code = ''
       form.value.name = ''
+      form.value.address = ''
+      form.value.phone = ''
       router.push('/branch/' + response.data._id)
 
       notification('', 'Create success', { type: TypesEnum.Success })
@@ -63,6 +67,8 @@ const onSubmit = async () => {
             <div class="space-y-2">
               <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
+              <component :is="BaseInput" v-model="form.address" label="Address"></component>
+              <component :is="BaseInput" v-model="form.phone" label="Phone"></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>

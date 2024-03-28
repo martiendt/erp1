@@ -14,7 +14,9 @@ const _id = ref('')
 
 const form = ref({
   code: '',
-  name: ''
+  name: '',
+  address: '',
+  phone: ''
 })
 
 onMounted(async () => {
@@ -25,6 +27,8 @@ onMounted(async () => {
       _id.value = result.data._id
       form.value.code = result.data.code
       form.value.name = result.data.name
+      form.value.address = result.data.address
+      form.value.phone = result.data.phone
     } else {
       router.push('/404')
     }
@@ -87,6 +91,8 @@ const onSubmit = async () => {
             <div class="space-y-2">
               <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
+              <component :is="BaseInput" v-model="form.address" label="Address"></component>
+              <component :is="BaseInput" v-model="form.phone" label="Phone"></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>
