@@ -45,9 +45,9 @@ const onDelete = async () => {
         return
       }
 
-      const result = await axios.delete(`/v1/suppliers/${route.params.id}`)
+      const result = await axios.delete(`/v1/supplier-groups/${route.params.id}`)
       if (result.status === 204) {
-        router.push('/supplier')
+        router.push('/supplier-group')
 
         notification('', 'Delete supplier data success', { type: TypesEnum.Success })
       }
