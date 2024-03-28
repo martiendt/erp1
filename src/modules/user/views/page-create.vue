@@ -52,9 +52,15 @@ const onSubmit = async () => {
       router.push('/user')
     }
   } catch (error) {
+    console.log(error)
+    console.log(error?.response)
     if (error instanceof AxiosError && error.response) {
       errors.value = error.response?.data.errors
-      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      if (errors.value) {
+        notification(error.response?.statusText, errors.value, { type: TypesEnum.Warning })
+      } else {
+        notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+      }
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {
