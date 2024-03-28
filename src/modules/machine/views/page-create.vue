@@ -3,16 +3,16 @@ import { ref } from 'vue'
 import { AxiosError } from 'axios'
 import { BaseBreadcrumb, BaseDivider, BaseInput } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import axios from '@/axios'
 
 const { notification } = useBaseNotification()
-const route = useRoute()
 const router = useRouter()
 
 const form = ref({
   code: '',
-  name: ''
+  name: '',
+  notes: ''
 })
 
 const errors = ref()
@@ -63,6 +63,7 @@ const onSubmit = async () => {
             <div class="space-y-2">
               <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
+              <component :is="BaseInput" required v-model="form.notes" label="Notes"></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>

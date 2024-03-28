@@ -17,6 +17,7 @@ const { notification } = useBaseNotification()
 
 const form = ref({
   code: '',
+  notes: '',
   name: ''
 })
 
@@ -27,6 +28,7 @@ onMounted(async () => {
     if (result.status === 200) {
       form.value.code = result.data.code
       form.value.name = result.data.name
+      form.value.notes = result.data.notes
     } else {
       router.push('/404')
     }

@@ -12,6 +12,7 @@ const router = useRouter()
 
 const form = ref({
   code: '',
+  notes: '',
   name: ''
 })
 
@@ -24,7 +25,9 @@ const onSubmit = async () => {
     const response = await axios.post('/v1/processes', form.value)
 
     if (response.status === 201) {
+      form.value.code = ''
       form.value.name = ''
+      form.value.notes = ''
       router.push('/process/' + response.data._id)
 
       notification('', 'Create success', { type: TypesEnum.Success })
