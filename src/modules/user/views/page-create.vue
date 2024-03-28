@@ -16,6 +16,7 @@ const branchApi = useBranchApi()
 const form = ref({
   name: '',
   username: '',
+  email: '',
   password: '',
   role: 'administrator',
   warehouse_id: '',
@@ -52,8 +53,6 @@ const onSubmit = async () => {
       router.push('/user')
     }
   } catch (error) {
-    console.log(error)
-    console.log(error?.response)
     if (error instanceof AxiosError && error.response) {
       errors.value = error.response?.data.errors
       if (errors.value) {
@@ -100,6 +99,7 @@ onMounted(async () => {
                 label="Username"
                 helper="used for user login"
               ></component>
+              <component :is="BaseInput" required v-model="form.email" label="Email"></component>
               <component
                 :is="BaseInput"
                 type="password"

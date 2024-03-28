@@ -19,6 +19,7 @@ export interface UserInterface {
   _id: string
   name: string
   username: string
+  email: string
   role: string
   warehouse: {
     name: string
@@ -37,6 +38,7 @@ const getUsers = async (page = 1, search = '') => {
       sort: 'name',
       filter: {
         username: search,
+        email: search,
         name: search,
         role: search
       }
@@ -146,6 +148,11 @@ const paginate = async (page: number) => {
                   </th>
                   <th class="basic-table-head">
                     <div class="flex items-center justify-between">
+                      <p>Email</p>
+                    </div>
+                  </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
                       <p>Role</p>
                     </div>
                   </th>
@@ -168,6 +175,7 @@ const paginate = async (page: number) => {
                       <router-link :to="`/user/${user._id}`" class="text-info">{{ user.name }}</router-link>
                     </td>
                     <td class="basic-table-body">{{ user.username }}</td>
+                    <td class="basic-table-body">{{ user.email }}</td>
                     <td class="basic-table-body">{{ user.role }}</td>
                     <td class="basic-table-body">{{ user.warehouse?.name }}</td>
                     <td class="basic-table-body">{{ user.branch?.name }}</td>

@@ -19,6 +19,7 @@ const _id = ref('')
 const form = ref({
   name: '',
   username: '',
+  email: '',
   role: '',
   warehouse_id: '',
   branch_id: ''
@@ -54,6 +55,7 @@ onMounted(async () => {
       _id.value = result.data._id
       form.value.name = result.data.name
       form.value.username = result.data.username
+      form.value.email = result.data.email
       form.value.role = result.data.role.toLowerCase()
 
       // set selected role
@@ -123,8 +125,9 @@ const onSubmit = async () => {
         <div class="flex flex-col gap-4">
           <form @submit.prevent="onSubmit()" class="space-y-5">
             <div class="space-y-2">
-              <component :is="BaseInput" required readonly v-model="form.name" label="Name"></component>
+              <component :is="BaseInput" required v-model="form.name" label="Name"></component>
               <component :is="BaseInput" required readonly v-model="form.username" label="Username"></component>
+              <component :is="BaseInput" required v-model="form.email" label="Email"></component>
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Role
