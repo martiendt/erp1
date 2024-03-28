@@ -15,27 +15,25 @@ const router = useRouter()
 const searchAll = ref('')
 const isLoadingSearch = ref(false)
 
-export interface MachineInterface {
+export interface SupplierGroupInterface {
   _id: string
-  code: string
   name: string
 }
-const machines = ref<MachineInterface[]>([])
+const itemCategories = ref<SupplierGroupInterface[]>([])
 
-const getMachines = async (page = 1, search = '') => {
-  const result = await axios.get('/v1/machines', {
+const getItemCategories = async (page = 1, search = '') => {
+  const result = await axios.get('/v1/supplier-groups', {
     params: {
       pageSize: 10,
       page: page,
       sort: 'name',
       filter: {
-        code: search,
         name: search
       }
     }
   })
 
-  machines.value = result.data.data
+  itemCategories.value = result.data.data
 
   pagination.page.value = result.data.pagination.page
   pagination.pageCount.value = result.data.pagination.pageCount
@@ -55,7 +53,7 @@ watchDebounced(
       }
     })
     isLoadingSearch.value = true
-    await getMachines(1, searchAll.value)
+    await getItemCategories(1, searchAll.value)
     isLoadingSearch.value = false
   },
   { debounce: 500, maxWait: 1000 }
@@ -64,7 +62,7 @@ watchDebounced(
 onMounted(async () => {
   const page = Number(route.query.page ?? 1)
   searchAll.value = route.query.search?.toString() ?? ''
-  await getMachines(page, searchAll.value)
+  await getItemCategories(page, searchAll.value)
 })
 
 const paginatePrev = async () => {
@@ -75,7 +73,7 @@ const paginatePrev = async () => {
       page: pagination.previousPage()
     }
   })
-  await getMachines(pagination.previousPage(), searchAll.value)
+  await getItemCategories(pagination.previousPage(), searchAll.value)
 }
 const paginateNext = async () => {
   router.replace({
@@ -85,7 +83,7 @@ const paginateNext = async () => {
       page: pagination.nextPage()
     }
   })
-  await getMachines(pagination.nextPage(), searchAll.value)
+  await getItemCategories(pagination.nextPage(), searchAll.value)
 }
 const paginate = async (page: number) => {
   router.replace({
@@ -95,23 +93,23 @@ const paginate = async (page: number) => {
       page: page
     }
   })
-  await getMachines(page, searchAll.value)
+  await getItemCategories(page, searchAll.value)
 }
 </script>
 
 <template>
   <div class="main-content-container">
     <div class="main-content-header">
-      <h1>Machine</h1>
+      <h1>Supplier Group</h1>
       <base-divider orientation="horizontal" />
-      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Machine' }]" />
+      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Supplier Group' }]" />
     </div>
     <div class="main-content-body">
       <div class="card card-template">
         <div class="flex flex-col gap-4">
           <div class="w-full flex items-center gap-4">
             <div class="w-full flex space-x-2">
-              <router-link to="/machine/create" class="btn btn-secondary rounded-none space-x-1">
+              <router-link to="/supplier-group/create" class="btn btn-secondary rounded-none space-x-1">
                 <i class="i-far-pen-to-square block"></i>
                 <p>Add New</p>
               </router-link>
@@ -128,24 +126,18 @@ const paginate = async (page: number) => {
                 <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
                   <th class="basic-table-head">
                     <div class="flex items-center justify-between">
-                      <p>Code</p>
-                    </div>
-                  </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
                       <p>Name</p>
                     </div>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <template v-if="machines.length > 0">
-                  <tr v-for="machine in machines" :key="machine._id" class="basic-table-row">
+                <template v-if="itemCategories.length > 0">
+                  <tr v-for="SupplierGroup in itemCategories" :key="SupplierGroup._id" class="basic-table-row">
                     <td class="basic-table-body">
-                      <router-link :to="`/machine/${machine._id}`" class="text-info">{{ machine.code }}</router-link>
-                    </td>
-                    <td class="basic-table-body">
-                      {{ machine.name }}
+                      <router-link :to="`/supplier-group/${SupplierGroup._id}`" class="text-info">{{
+                        SupplierGroup.name
+                      }}</router-link>
                     </td>
                   </tr>
                 </template>

@@ -142,8 +142,18 @@ const menuMain = {
           allowed: ['administrator']
         },
         {
+          name: 'Supplier Group',
+          path: '/supplier-group',
+          allowed: ['administrator']
+        },
+        {
           name: 'Supplier',
           path: '/supplier',
+          allowed: ['administrator']
+        },
+        {
+          name: 'Customer Group',
+          path: '/customer-group',
           allowed: ['administrator']
         },
         {

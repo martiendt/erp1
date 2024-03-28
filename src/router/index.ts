@@ -5,6 +5,8 @@ import { routes as processRoutes } from '@/modules/process/routes'
 import { routes as machineRoutes } from '@/modules/machine/routes'
 import { routes as allocationRoutes } from '@/modules/allocation/routes'
 import { routes as allocationGroupRoutes } from '@/modules/allocation-group/routes'
+import { routes as customerGroupRoutes } from '@/modules/customer-group/routes'
+import { routes as supplierGroupRoutes } from '@/modules/supplier-group/routes'
 import { routes as authenticationRoutes } from '@/modules/authentication/routes'
 import { routes as userRoutes } from '@/modules/user/routes'
 import { routes as branchRoutes } from '@/modules/branch/routes'
@@ -30,6 +32,8 @@ const routes = [
   machineRoutes,
   allocationRoutes,
   allocationGroupRoutes,
+  customerGroupRoutes,
+  supplierGroupRoutes,
   authenticationRoutes,
   userRoutes,
   branchExpenseRoutes,

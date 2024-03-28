@@ -142,10 +142,10 @@ const paginate = async (page: number) => {
                 <template v-if="processes.length > 0">
                   <tr v-for="process in processes" :key="process._id" class="basic-table-row">
                     <td class="basic-table-body">
-                      <router-link :to="`/process/${process._id}`" class="text-info">{{ process.name }}</router-link>
+                      <router-link :to="`/process/${process._id}`" class="text-info">{{ process.code }}</router-link>
                     </td>
                     <td class="basic-table-body">
-                      {{ process.code }}
+                      {{ process.name }}
                     </td>
                   </tr>
                 </template>
