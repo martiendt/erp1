@@ -2,10 +2,11 @@
 import { ref, onMounted } from 'vue'
 import { BaseBreadcrumb } from '@/components/index'
 import { BaseDivider } from '@/components/index'
-import { BaseInput } from '@/components/index'
+import { BaseInput, BaseModal } from '@/components/index'
 import { useRoute, useRouter } from 'vue-router'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import axios from '@/axios'
+import { AxiosError } from 'axios'
 
 const route = useRoute()
 const router = useRouter()
@@ -29,27 +30,44 @@ onMounted(async () => {
   }
 })
 
+const passwordConfirmation = ref('')
+const showModal = ref(false)
+
 const onDelete = async () => {
-  const password = prompt('Are you sure want to delete this data?')
+  showModal.value = false
+  try {
+    if (passwordConfirmation.value) {
+      const verifyPasswordResponse = await axios.post(`/v1/users/verify-password`, {
+        password: passwordConfirmation.value
+      })
+      if (verifyPasswordResponse.status !== 204) {
+        notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
+        return
+      }
 
-  if (password) {
-    const verifyPasswordResponse = await axios.post(`/v1/users/verify-password`, {
-      password: password
-    })
+      const result = await axios.delete(`/v1/suppliers/${route.params.id}`)
+      if (result.status === 204) {
+        router.push('/supplier')
 
-    if (verifyPasswordResponse.status !== 204) {
+        notification('', 'Delete supplier data success', { type: TypesEnum.Success })
+      }
+    } else {
       notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
-      return
     }
-
-    const result = await axios.delete(`/v1/supplier-groups/${route.params.id}`)
-    if (result.status === 204) {
-      router.push('/supplier-group')
-
-      notification('', 'Delete Supplier Group data success', { type: TypesEnum.Success })
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      if (error.response.status === 401) {
+        notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
+      } else {
+        notification('Delete Failed', 'Cannot delete this data because used by other module', {
+          type: TypesEnum.Warning
+        })
+      }
+    } else if (error instanceof AxiosError) {
+      notification(error.code as string, error.message, { type: TypesEnum.Warning })
+    } else {
+      notification('Unknown Error', '', { type: TypesEnum.Warning })
     }
-  } else {
-    notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
   }
 }
 </script>
@@ -85,10 +103,22 @@ const onDelete = async () => {
               </router-link>
             </div>
             <div>
-              <button @click="onDelete()" type="button" class="btn btn-danger btn-sm rounded-none space-x-1">
+              <button @click="showModal = true" type="button" class="btn btn-danger btn-sm rounded-none space-x-1">
                 <i class="i-far-trash block"></i>
                 <span>Delete</span>
               </button>
+              <component :is="BaseModal" :is-open="showModal" @on-close="showModal = false">
+                <template #content>
+                  <div class="max-h-90vh overflow-auto p-4">
+                    <h2 class="py-4 text-2xl font-bold">Delete Confirmation</h2>
+                    <div class="space-y-8">
+                      Please input your password to verify this action
+                      <component :is="BaseInput" v-model="passwordConfirmation" type="password" label=""></component>
+                      <button class="btn btn-danger btn-block" @click="onDelete()">Delete</button>
+                    </div>
+                  </div>
+                </template>
+              </component>
             </div>
           </div>
         </div>
