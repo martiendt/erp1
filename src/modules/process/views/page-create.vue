@@ -66,6 +66,7 @@ const onSubmit = async () => {
             <div class="space-y-2">
               <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
+              <component :is="BaseInput" v-model="form.notes" label="Notes"></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>
