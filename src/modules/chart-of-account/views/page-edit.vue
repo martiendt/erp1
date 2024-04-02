@@ -18,30 +18,46 @@ const _id = ref('')
 
 const form = ref({
   name: '',
-  coaname: '',
-  email: '',
-  role: '',
-  warehouse_id: '',
-  branch_id: ''
+  number: '',
+  type: '',
+  category: '',
+  subledger: '',
+  increasing_in: ''
 })
 
-const list = [
-  { id: 1, label: 'Administrator' },
-  { id: 2, label: 'Admin Purchasing' },
-  { id: 3, label: 'Admin Stock' },
-  { id: 4, label: 'Cashier' }
+const listType = [
+  { id: 1, label: 'Asset' },
+  { id: 2, label: 'Liability' },
+  { id: 3, label: 'Equity' },
+  { id: 4, label: 'Income' },
+  { id: 5, label: 'Expense' }
 ]
-const selectedRole = ref()
-watch(selectedRole, () => {
-  form.value.role = selectedRole.value.label.toLowerCase()
+
+const selectedType = ref()
+watch(selectedType, () => {
+  form.value.type = selectedType.value?.label?.toLowerCase() ?? ''
 })
-const selectedWarehouse = ref<{ id: string; label: string }>()
-watch(selectedWarehouse, () => {
-  form.value.warehouse_id = selectedWarehouse.value?.id ?? ''
+
+const listCategory = [
+  { id: 1, label: 'Cash' },
+  { id: 2, label: 'Bank' },
+  { id: 3, label: 'Inventory' }
+]
+
+const selectedCategory = ref()
+watch(selectedCategory, () => {
+  form.value.category = selectedCategory.value?.label?.toLowerCase() ?? ''
 })
-const selectedBranch = ref<{ id: string; label: string }>()
-watch(selectedBranch, () => {
-  form.value.branch_id = selectedBranch.value?.id ?? ''
+
+const listSubledger = [
+  { id: 1, label: 'Item' },
+  { id: 2, label: 'Supplier' },
+  { id: 3, label: 'Customer' }
+]
+
+const selectedSubledger = ref()
+watch(selectedSubledger, () => {
+  form.value.subledger = selectedSubledger.value?.label?.toLowerCase() ?? ''
 })
 
 onMounted(async () => {
@@ -54,21 +70,31 @@ onMounted(async () => {
     if (result.status === 200) {
       _id.value = result.data._id
       form.value.name = result.data.name
-      form.value.coaname = result.data.coaname
-      form.value.email = result.data.email
-      form.value.role = result.data.role.toLowerCase()
+      form.value.number = result.data.number.toString()
+      form.value.type = result.data.type
+      form.value.category = result.data.category
 
-      // set selected role
-      const index = list.findIndex((el) => {
-        return el.label.toLowerCase() === result.data.role.toLowerCase()
+      // set selected category
+      listType.forEach((el) => {
+        if (el.label.toLowerCase().trim() == result.data.type.toLowerCase().trim()) {
+          selectedType.value = { id: el.id, label: el.label }
+          form.value.type = selectedType.value?.label?.toLowerCase() ?? ''
+        }
       })
-      selectedRole.value = list[index < 0 ? 1 : index]
-      if (result.data.warehouse) {
-        selectedWarehouse.value = { id: result.data.warehouse._id, label: result.data.warehouse.name }
-      }
-      if (result.data.branch) {
-        selectedBranch.value = { id: result.data.branch._id, label: result.data.branch.name }
-      }
+
+      listCategory.forEach((el) => {
+        if (el.label.toLowerCase().trim() == result.data.category.toLowerCase().trim()) {
+          selectedCategory.value = { id: el.id, label: el.label }
+          form.value.category = selectedCategory.value?.label?.toLowerCase() ?? ''
+        }
+      })
+
+      listSubledger.forEach((el) => {
+        if (el.label.toLowerCase().trim() == result.data.subledger?.toLowerCase().trim()) {
+          selectedSubledger.value = { id: el.id, label: el.label }
+          form.value.subledger = selectedSubledger.value?.label?.toLowerCase() ?? ''
+        }
+      })
     } else {
       router.push('/404')
     }
@@ -125,40 +151,36 @@ const onSubmit = async () => {
         <div class="flex flex-col gap-4">
           <form @submit.prevent="onSubmit()" class="space-y-5">
             <div class="space-y-2">
-              <component :is="BaseInput" required v-model="form.name" label="Name"></component>
-              <component :is="BaseInput" required readonly v-model="form.coaname" label="Coaname"></component>
-              <component :is="BaseInput" required v-model="form.email" label="Email"></component>
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
-                  Role
+                  Type
                   <span class="text-xs text-slate-400">*</span>
                 </label>
-                <component :is="BaseSelect" v-model="selectedRole" :list="list"></component>
+                <component :is="BaseSelect" v-model="selectedType" required :list="listType"></component>
               </div>
-            </div>
-            <div class="flex flex-col items-start gap-1">
-              <label class="text-sm font-bold">
-                Warehouse
-                <span class="text-xs text-slate-400">*</span>
-              </label>
-              <component
-                :is="BaseAutocomplete"
-                required
-                v-model="selectedWarehouse"
-                :list="warehouseApi.listWarehouse.value"
-              ></component>
-            </div>
-            <div class="flex flex-col items-start gap-1">
-              <label class="text-sm font-bold">
-                Branch
-                <span class="text-xs text-slate-400">*</span>
-              </label>
-              <component
-                :is="BaseAutocomplete"
-                required
-                v-model="selectedBranch"
-                :list="branchApi.listBranch.value"
-              ></component>
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold">
+                  Category
+                  <span class="text-xs text-slate-400">*</span>
+                </label>
+                <component :is="BaseSelect" v-model="selectedCategory" required :list="listCategory"></component>
+              </div>
+              <component :is="BaseInput" required v-model="form.name" label="Name"></component>
+              <component :is="BaseInput" required readonly v-model="form.number" label="Number"></component>
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold"> Default Value </label>
+                <div class="flex gap-2">
+                  <input type="radio" id="debit" name="increasingIn" value="debit" v-model="form.increasing_in" /> Debit
+                </div>
+                <div class="flex gap-2">
+                  <input type="radio" id="credit" name="increasingIn" value="credit" v-model="form.increasing_in" />
+                  Credit
+                </div>
+              </div>
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold"> Subledger </label>
+                <component :is="BaseSelect" v-model="selectedSubledger" required :list="listSubledger"></component>
+              </div>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>

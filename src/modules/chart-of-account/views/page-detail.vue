@@ -14,28 +14,20 @@ const { notification } = useBaseNotification()
 
 export interface CoaInterface {
   name: string
-  coaname: string
-  email: string
-  role: string
-  warehouse: {
-    name: string
-  }
-  branch: {
-    name: string
-  }
+  number: string
+  type: string
+  category: string
+  increasing_in: string
+  subledger: string
 }
 
 const form = ref<CoaInterface>({
   name: '',
-  coaname: '',
-  email: '',
-  role: '',
-  warehouse: {
-    name: ''
-  },
-  branch: {
-    name: ''
-  }
+  number: '',
+  type: '',
+  category: '',
+  increasing_in: '',
+  subledger: ''
 })
 
 onMounted(async () => {
@@ -44,11 +36,11 @@ onMounted(async () => {
 
     if (result.status === 200) {
       form.value.name = result.data.name
-      form.value.coaname = result.data.coaname
-      form.value.email = result.data.email
-      form.value.role = result.data.role
-      form.value.warehouse.name = result.data.warehouse?.name ?? ''
-      form.value.branch.name = result.data.branch?.name ?? ''
+      form.value.number = result.data.number
+      form.value.type = result.data.type
+      form.value.category = result.data.category
+      form.value.increasing_in = result.data.increasing_in
+      form.value.subledger = result.data.subledger
     } else {
       router.push('/404')
     }
@@ -63,7 +55,7 @@ const onDelete = async () => {
   try {
     showModal.value = false
     if (passwordConfirmation.value) {
-      const verifyPasswordResponse = await axios.post(`/v1/coas/verify-password`, {
+      const verifyPasswordResponse = await axios.post(`/v1/users/verify-password`, {
         password: passwordConfirmation.value
       })
 
@@ -71,18 +63,20 @@ const onDelete = async () => {
         notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
         return
       }
-      const result = await axios.delete(`/v1/warehouses/${route.params.id}`)
+
+      const result = await axios.delete(`/v1/coas/${route.params.id}`)
 
       if (result.status === 204) {
-        router.push('/warehouse')
+        router.push('/coa')
 
-        notification('', 'Delete warehouse data success', { type: TypesEnum.Success })
+        notification('', 'Delete coa data success', { type: TypesEnum.Success })
       }
     } else {
       notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
+      console.log(error)
       if (error.response.status === 401) {
         notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
       } else {
@@ -149,12 +143,12 @@ const onDelete = async () => {
         <div class="flex flex-col gap-4">
           <div class="space-y-5">
             <div class="space-y-2">
+              <component :is="BaseInput" readonly v-model="form.type" label="Type"></component>
+              <component :is="BaseInput" readonly v-model="form.category" label="Category"></component>
               <component :is="BaseInput" readonly v-model="form.name" label="Name"></component>
-              <component :is="BaseInput" readonly v-model="form.coaname" label="Coaname"></component>
-              <component :is="BaseInput" readonly v-model="form.email" label="Email"></component>
-              <component :is="BaseInput" readonly v-model="form.role" label="Role"></component>
-              <component :is="BaseInput" readonly v-model="form.warehouse.name" label="Warehouse"></component>
-              <component :is="BaseInput" readonly v-model="form.branch.name" label="Branch"></component>
+              <component :is="BaseInput" readonly v-model="form.number" label="Number"></component>
+              <component :is="BaseInput" readonly v-model="form.increasing_in" label="Increasing In"></component>
+              <component :is="BaseInput" readonly v-model="form.subledger" label="Subledger"></component>
             </div>
           </div>
         </div>
