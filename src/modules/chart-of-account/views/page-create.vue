@@ -36,9 +36,34 @@ watch(selectedType, () => {
 })
 
 const listCategory = [
-  { id: 1, label: 'Cash' },
-  { id: 2, label: 'Bank' },
-  { id: 3, label: 'Inventory' }
+  { id: 1, label: 'ACCOUNT PAYABLE' },
+  { id: 2, label: 'ACCOUNT RECEIVABLE' },
+  { id: 3, label: 'ACCOUNT RECEIVABLE OF EMPLOYEE' },
+  { id: 4, label: 'ACCOUNT RECEIVABLE OF MANAGEMENT' },
+  { id: 5, label: 'ASSET DOWN PAYMENT ' },
+  { id: 6, label: 'BANK' },
+  { id: 7, label: 'CASH' },
+  { id: 8, label: 'CASH-BANK TRANSFER' },
+  { id: 9, label: 'COST OF SALES' },
+  { id: 10, label: 'DIRECT EXPENSE' },
+  { id: 11, label: 'FACTORY OVERHEAD COST' },
+  { id: 12, label: 'FIX ASSET' },
+  { id: 13, label: 'FIX ASSET DEPRECIATION' },
+  { id: 14, label: 'INCOME TAX PAYABLE' },
+  { id: 15, label: 'INCOME TAX RECEIVABLE' },
+  { id: 16, label: 'INVENTORY' },
+  { id: 17, label: 'LONG TERM LIABILITY' },
+  { id: 18, label: 'NET INCOME FOR THE MONTH ' },
+  { id: 19, label: 'NET INCOME FOR THE YEAR ' },
+  { id: 20, label: 'NOTE PAYABLE' },
+  { id: 21, label: 'NOTE RECEIVABLE' },
+  { id: 22, label: 'OTHER ACCOUNT RECEIVABLE' },
+  { id: 23, label: 'OTHER ASSETS' },
+  { id: 24, label: 'OTHER ASSETS AMORTIZATION' },
+  { id: 25, label: 'OTHER CURRENT ASSET' },
+  { id: 26, label: 'OTHER CURRENT LIABILITY' },
+  { id: 27, label: 'OTHER EXPENSE' },
+  { id: 28, label: 'OTHER INCOME' }
 ]
 
 const selectedCategory = ref()
