@@ -137,6 +137,11 @@ const menuMain = {
           allowed: ['administrator']
         },
         {
+          name: 'Item Category',
+          path: '/item-category',
+          allowed: ['administrator']
+        },
+        {
           name: 'Item',
           path: '/item',
           allowed: ['administrator']
@@ -165,10 +170,16 @@ const menuMain = {
           name: 'Expedition',
           path: '/expedition',
           allowed: ['administrator']
-        },
+        }
+      ],
+      allowed: ['administrator']
+    },
+    {
+      name: 'Accounting',
+      submenu: [
         {
-          name: 'Item Category',
-          path: '/item-category',
+          name: 'Cart of Account',
+          path: '/coa',
           allowed: ['administrator']
         }
       ],
