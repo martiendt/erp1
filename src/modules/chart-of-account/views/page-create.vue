@@ -105,6 +105,8 @@ const onSubmit = async () => {
 
     if (response.status === 201) {
       router.push('/coa')
+
+      notification('', 'Create success', { type: TypesEnum.Success })
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -162,18 +164,33 @@ onMounted(async () => {
               <component :is="BaseInput" required v-model="form.number" label="Number"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
               <div class="flex flex-col items-start gap-1">
-                <label class="text-sm font-bold"> Default Value </label>
+                <label class="text-sm font-bold"> Increasing In </label>
                 <div class="flex gap-2">
-                  <input type="radio" id="debit" name="increasingIn" value="debit" v-model="form.increasing_in" /> Debit
+                  <input
+                    required
+                    type="radio"
+                    id="debit"
+                    name="increasingIn"
+                    value="debit"
+                    v-model="form.increasing_in"
+                  />
+                  Debit
                 </div>
                 <div class="flex gap-2">
-                  <input type="radio" id="credit" name="increasingIn" value="credit" v-model="form.increasing_in" />
+                  <input
+                    required
+                    type="radio"
+                    id="credit"
+                    name="increasingIn"
+                    value="credit"
+                    v-model="form.increasing_in"
+                  />
                   Credit
                 </div>
               </div>
               <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold"> Subledger </label>
-                <component :is="BaseSelect" v-model="selectedSubledger" required :list="listSubledger"></component>
+                <component :is="BaseSelect" v-model="selectedSubledger" :list="listSubledger"></component>
               </div>
             </div>
             <button class="btn btn-primary">Submit</button>
