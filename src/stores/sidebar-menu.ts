@@ -178,7 +178,7 @@ const menuMain = {
       name: 'Accounting',
       submenu: [
         {
-          name: 'Cart of Account',
+          name: 'Chart of Account',
           path: '/coa',
           allowed: ['administrator']
         }
