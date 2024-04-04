@@ -9,6 +9,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { useCoaApi } from '../api/coa'
 
 import axios from '@/axios'
+import { AxiosError } from 'axios'
+import { useBaseNotification, TypesEnum } from '@/composable/notification'
+
+const { notification } = useBaseNotification()
 
 const coaApi = useCoaApi()
 const pagination = usePagination()
@@ -31,6 +35,7 @@ export interface SettingJournalInterface {
   _id: string
   module: string
   account: string
+  coa_id: string
 }
 const coas = ref<SettingJournalInterface[]>([])
 
@@ -47,6 +52,7 @@ const getCoas = async (page = 1) => {
   })
 
   coas.value = result.data.data
+  form.value.coa = coas.value
 
   pagination.page.value = result.data.pagination.page
   pagination.pageCount.value = result.data.pagination.pageCount
@@ -75,9 +81,48 @@ watchDebounced(
 onMounted(async () => {
   await coaApi.fetchListCoa()
   const page = Number(route.query.page ?? 1)
-  searchAll.value = route.query.search?.toString() ?? ''
   await getCoas(page)
+  // form.value.coa[0].coa_id = coaApi.listCoa.value[0]
+  coaApi.listCoa.value.forEach((el) => {
+    var index = 0
+    coas.value.forEach((el2) => {
+      if (el.id === el2.coa_id) {
+        form.value.coa[index].coa_id = el
+      }
+      index++
+    })
+  })
+  searchAll.value = route.query.search?.toString() ?? ''
 })
+const errors = ref()
+
+const isSubmitted = ref(false)
+const onSubmit = async () => {
+  try {
+    isSubmitted.value = true
+    form.value.coa.forEach((element) => {
+      element.coa_id = element.coa_id.id
+    })
+
+    const response = await axios.post('/v1/setting-journals', form.value)
+
+    if (response.status === 204) {
+      notification('', 'Update success', { type: TypesEnum.Success })
+      router.push('/coa/setting-journal')
+    }
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      errors.value = error.response?.data.errors
+      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+    } else if (error instanceof AxiosError) {
+      notification(error.code as string, error.message, { type: TypesEnum.Warning })
+    } else {
+      notification('Unknown Error', '', { type: TypesEnum.Warning })
+    }
+  } finally {
+    isSubmitted.value = false
+  }
+}
 </script>
 
 <template>
@@ -87,6 +132,7 @@ onMounted(async () => {
       <base-divider orientation="horizontal" />
       <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Setting Journal' }]" />
     </div>
+    <br />
     <div class="main-content-body">
       <div class="card card-template">
         <div class="flex flex-col gap-4">
@@ -112,13 +158,13 @@ onMounted(async () => {
                 <component
                   :is="BaseAutocomplete"
                   required
-                  v-model="form.coa[index]"
+                  v-model="form.coa[index].coa_id"
                   :list="coaApi.listCoa.value"
                 ></component>
               </div>
             </div>
             <div class="mt-5">
-              <button class="btn btn-primary">Update</button>
+              <button class="btn btn-primary" @click="onSubmit">Update</button>
             </div>
           </div>
         </div>
