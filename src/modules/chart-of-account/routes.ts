@@ -15,6 +15,14 @@ export const routes = {
       component: () => import('./views/page-create.vue')
     },
     {
+      path: 'setting-journal',
+      component: () => import('./views/page-setting-journal.vue')
+    },
+    {
+      path: 'setting-journal/:module',
+      component: () => import('./views/page-update-setting-journal.vue')
+    },
+    {
       path: ':id',
       component: () => import('./views/page-detail.vue')
     },

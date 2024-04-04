@@ -15,33 +15,26 @@ const router = useRouter()
 const searchAll = ref('')
 const isLoadingSearch = ref(false)
 
-export interface CoaInterface {
+export interface SettingJournalInterface {
   _id: string
-  name: string
-  number: string
-  type: string
-  category: string
-  increasing_in: string
-  subledger: string
+  module: string
 }
-const coas = ref<CoaInterface[]>([])
+const coas = ref<SettingJournalInterface[]>([])
 
 const getCoas = async (page = 1, search = '') => {
-  const result = await axios.get('/v1/coas', {
+  const result = await axios.get('/v1/setting-journals', {
     params: {
       pageSize: 10,
       page: page,
-      sort: 'number',
+      sort: 'module',
       filter: {
-        number: search,
-        type: search,
-        name: search,
-        category: search,
-        increasing_in: search,
-        subledger: search
+        module: search,
+        group: true
       }
     }
   })
+
+  console.log(result)
 
   coas.value = result.data.data
 
@@ -112,7 +105,7 @@ const paginate = async (page: number) => {
     <div class="main-content-header">
       <h1>Chart of Account</h1>
       <base-divider orientation="horizontal" />
-      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Coa' }]" />
+      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Setting Journal' }]" />
     </div>
     <div class="main-content-body">
       <div class="card card-template">
@@ -140,32 +133,7 @@ const paginate = async (page: number) => {
                 <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
                   <th class="basic-table-head">
                     <div class="flex items-center justify-between">
-                      <p>Type</p>
-                    </div>
-                  </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
-                      <p>Category</p>
-                    </div>
-                  </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
-                      <p>Number</p>
-                    </div>
-                  </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
-                      <p>Name</p>
-                    </div>
-                  </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
-                      <p>Default Value</p>
-                    </div>
-                  </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
-                      <p>Category</p>
+                      <p>Module</p>
                     </div>
                   </th>
                 </tr>
@@ -173,14 +141,11 @@ const paginate = async (page: number) => {
               <tbody>
                 <template v-if="coas.length > 0">
                   <tr v-for="coa in coas" :key="coa._id" class="basic-table-row">
-                    <td class="basic-table-body">{{ coa.type }}</td>
-                    <td class="basic-table-body">{{ coa.category }}</td>
-                    <td class="basic-table-body">{{ coa.number }}</td>
                     <td class="basic-table-body">
-                      <router-link :to="`/coa/${coa._id}`" class="text-info">{{ coa.name }}</router-link>
+                      <router-link :to="`/coa/setting-journal/${coa.module}`" class="text-info">{{
+                        coa.module
+                      }}</router-link>
                     </td>
-                    <td class="basic-table-body">{{ coa.increasing_in }}</td>
-                    <td class="basic-table-body">{{ coa.subledger }}</td>
                   </tr>
                 </template>
               </tbody>
