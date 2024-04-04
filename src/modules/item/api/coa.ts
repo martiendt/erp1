@@ -10,7 +10,7 @@ export function useCoaApi() {
         page: 1,
         sort: 'name',
         filter: {
-          category: 'inventory'
+          name: 'inventory'
         }
       }
     })
