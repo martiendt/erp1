@@ -100,9 +100,22 @@ const isSubmitted = ref(false)
 const onSubmit = async () => {
   try {
     isSubmitted.value = true
-    form.value.coa.forEach((element) => {
+    for (const element of form.value.coa) {
+      if (!element.coa_id?.id?.length) {
+        notification('', 'Please fill all account field', { type: TypesEnum.Danger })
+        coaApi.listCoa.value.forEach((el) => {
+          var index = 0
+          coas.value.forEach((el2) => {
+            if (el.id === el2.coa_id) {
+              form.value.coa[index].coa_id = el
+            }
+            index++
+          })
+        })
+        return
+      }
       element.coa_id = element.coa_id.id
-    })
+    }
 
     const response = await axios.post('/v1/setting-journals', form.value)
 
