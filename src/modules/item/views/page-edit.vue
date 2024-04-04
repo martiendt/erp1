@@ -1,26 +1,46 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { AxiosError } from 'axios'
-import { BaseBreadcrumb, BaseDivider, BaseInput, BaseNumeric } from '@/components/index'
+import { BaseBreadcrumb, BaseDivider, BaseInput, BaseAutocomplete } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRoute, useRouter } from 'vue-router'
 import axios from '@/axios'
+import { useCoaApi } from '../api/coa'
+import { useItemCategoryApi } from '../api/item-category'
 
+const coaApi = useCoaApi()
+const itemCategoryApi = useItemCategoryApi()
 const { notification } = useBaseNotification()
 const route = useRoute()
 const router = useRouter()
 
 const _id = ref('')
 
+const selectedCoa = ref<{ id: string; label: string }>()
+const selectedItemCategory = ref<{ id: string; label: string }>()
+
+watch(selectedCoa, () => {
+  form.value.coa_id = selectedCoa.value?.id ?? ''
+})
+
+watch(selectedItemCategory, () => {
+  form.value.item_category_id = selectedItemCategory.value?.id ?? ''
+})
+
 const form = ref({
   code: '',
   name: '',
   unit: '',
+  coa_id: '',
+  item_category_id: '',
   notes: ''
 })
 
 onMounted(async () => {
   try {
+    await coaApi.fetchListCoa()
+    await itemCategoryApi.fetchListItemCategory()
+
     const result = await axios.get(`/v1/items/${route.params.id}`)
 
     if (result.status === 200) {
@@ -29,6 +49,8 @@ onMounted(async () => {
       form.value.name = result.data.name
       form.value.unit = result.data.unit
       form.value.notes = result.data.notes
+      form.value.item_category_id = result.data.item_category_id
+      form.value.coa_id = result.data.coa_id
     } else {
       router.push('/404')
     }
@@ -89,6 +111,24 @@ const onSubmit = async () => {
         <div class="flex flex-col gap-4">
           <form @submit.prevent="onSubmit()" class="space-y-5">
             <div class="space-y-2">
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold"> Category </label>
+                <component
+                  :is="BaseAutocomplete"
+                  v-model="form.item_category_id"
+                  :list="itemCategoryApi.listItemCategory.value"
+                ></component>
+              </div>
+
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold"> Coa *</label>
+                <component
+                  :is="BaseAutocomplete"
+                  required
+                  v-model="form.coa_id"
+                  :list="coaApi.listCoa.value"
+                ></component>
+              </div>
               <component :is="BaseInput" required v-model="form.code" label="Code"></component>
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
               <component :is="BaseInput" v-model="form.unit" label="Unit"></component>

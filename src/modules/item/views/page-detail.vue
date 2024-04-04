@@ -19,6 +19,8 @@ const form = ref({
   code: '',
   name: '',
   unit: '',
+  item_category_id: '',
+  coa_id: '',
   notes: ''
 })
 
@@ -31,6 +33,8 @@ onMounted(async () => {
       form.value.name = result.data.name
       form.value.unit = result.data.unit
       form.value.notes = result.data.notes
+      if (result.data.item_category_id) form.value.item_category_id = result.data.item_category_id.label
+      if (result.data.coa_id) form.value.coa_id = result.data.coa_id.label
     } else {
       router.push('/404')
     }
@@ -135,6 +139,8 @@ const onDelete = async () => {
               <component :is="BaseInput" readonly v-model="form.code" label="Code"></component>
               <component :is="BaseInput" readonly v-model="form.name" label="Name"></component>
               <component :is="BaseInput" readonly v-model="form.unit" label="Unit"></component>
+              <component :is="BaseInput" readonly v-model="form.item_category_id" label="Item Category"></component>
+              <component :is="BaseInput" readonly v-model="form.coa_id" label="Coa"></component>
               <component :is="BaseInput" readonly v-model="form.notes" label="Notes"></component>
             </div>
           </div>
