@@ -54,7 +54,7 @@ const onSubmit = async () => {
       form.value.unit = ''
       form.value.notes = ''
 
-      router.push('/item/' + response.data._id)
+      router.push('/item')
 
       notification('', 'Create success', { type: TypesEnum.Success })
     }
