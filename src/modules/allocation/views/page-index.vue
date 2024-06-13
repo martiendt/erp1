@@ -24,7 +24,7 @@ const allocations = ref<AllocationInterface[]>([])
 const getAllocations = async (page = 1, search = '') => {
   const result = await axios.get('/v1/allocations', {
     params: {
-      pageSize: 10,
+      pageSize: 100,
       page: page,
       sort: 'name',
       filter: {
