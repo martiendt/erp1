@@ -17,7 +17,7 @@ export interface UserInterface {
   username: string
   email: string
   role: string
-  warehouse: {
+  user: {
     name: string
   }
   branch: {
@@ -30,7 +30,7 @@ const form = ref<UserInterface>({
   username: '',
   email: '',
   role: '',
-  warehouse: {
+  user: {
     name: ''
   },
   branch: {
@@ -47,7 +47,7 @@ onMounted(async () => {
       form.value.username = result.data.username
       form.value.email = result.data.email
       form.value.role = result.data.role
-      form.value.warehouse.name = result.data.warehouse?.name ?? ''
+      form.value.user.name = result.data.user?.name ?? ''
       form.value.branch.name = result.data.branch?.name ?? ''
     } else {
       router.push('/404')
@@ -71,12 +71,12 @@ const onDelete = async () => {
         notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
         return
       }
-      const result = await axios.delete(`/v1/warehouses/${route.params.id}`)
+      const result = await axios.delete(`/v1/users/${route.params.id}`)
 
       if (result.status === 204) {
-        router.push('/warehouse')
+        router.push('/user')
 
-        notification('', 'Delete warehouse data success', { type: TypesEnum.Success })
+        notification('', 'Delete user data success', { type: TypesEnum.Success })
       }
     } else {
       notification('Authentication Failed', 'Your password is incorrect', { type: TypesEnum.Warning })
@@ -156,7 +156,7 @@ const onDelete = async () => {
               <component :is="BaseInput" readonly v-model="form.username" label="Username"></component>
               <component :is="BaseInput" readonly v-model="form.email" label="Email"></component>
               <component :is="BaseInput" readonly v-model="form.role" label="Role"></component>
-              <component :is="BaseInput" readonly v-model="form.warehouse.name" label="Warehouse"></component>
+              <component :is="BaseInput" readonly v-model="form.user.name" label="Warehouse"></component>
               <component :is="BaseInput" readonly v-model="form.branch.name" label="Branch"></component>
             </div>
           </div>
