@@ -26,7 +26,7 @@ const items = ref<ItemInterface[]>([])
 const getItems = async (page = 1, search = '') => {
   const result = await axios.get('/v1/items', {
     params: {
-      pageSize: 10,
+      pageSize: 100,
       page: page,
       sort: 'name',
       filter: {
