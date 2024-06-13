@@ -28,7 +28,7 @@ const customers = ref<CustomerInterface[]>([])
 const getCustomers = async (page = 1, search = '') => {
   const result = await axios.get('/v1/customers', {
     params: {
-      pageSize: 10,
+      pageSize: 100,
       page: page,
       sort: 'name',
       filter: {

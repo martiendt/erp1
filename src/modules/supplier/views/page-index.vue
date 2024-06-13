@@ -28,7 +28,7 @@ const suppliers = ref<SupplierInterface[]>([])
 const getSuppliers = async (page = 1, search = '') => {
   const result = await axios.get('/v1/suppliers', {
     params: {
-      pageSize: 10,
+      pageSize: 100,
       page: page,
       sort: 'name',
       filter: {
