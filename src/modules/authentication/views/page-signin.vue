@@ -45,7 +45,7 @@ const onSignin = async () => {
     <div class="mx-auto max-w-xl w-full p-4 sm:px-5">
       <div class="text-center">
         <div class="mt-4">
-          <h2 class="text-2xl font-semibold text-slate-600 dark:text-slate-100">Point ERP</h2>
+          <h2 class="text-2xl font-semibold text-slate-600 dark:text-slate-100">MY PORTFOLIO</h2>
           <p class="text-slate-400 dark:text-slate-300">Please sign in to continue</p>
         </div>
       </div>
